@@ -19,14 +19,6 @@ namespace ReadingStrike.Manager
         {
             sceneType = SceneType.Title;
         }
-        public void SceneChange(int index)
-        {
-            if (!IsSceneChangePossible(index)) return;
-            isSceneChanging = true;
-            SceneManager.LoadScene(index);
-            sceneType = (SceneType)index;
-            isSceneChanging = false;
-        }
         public void SceneChangeStartCo(int index)
         {
             StartCoroutine(SceneChangeCo(index));
@@ -39,6 +31,7 @@ namespace ReadingStrike.Manager
             while (!asyncLoad.isDone) yield return null;
 
             isSceneChanging = false;
+            Debug.Log(SceneManager.GetActiveScene().name);
         }
         bool IsSceneChangePossible(int index)
         {

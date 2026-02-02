@@ -25,7 +25,18 @@ namespace ReadingStrike.Manager
         // Update is called once per frame
         void Update()
         {
-
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                SceneChange(0);
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+                SceneChange(1);
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+                SceneChange(2);
         }
+        #region SceneChange 함수
+        void SceneChange(int index)
+        {
+            sceneMgr.SceneChangeStartCo(index);
+        }
+        #endregion
     }
 }
