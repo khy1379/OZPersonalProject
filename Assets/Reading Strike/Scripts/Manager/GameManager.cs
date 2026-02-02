@@ -1,28 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ReadingStrike.Manager
 {
+    public class GameManagerEvent
+    {
+        public event Action RequestGameInit;
+        public void RaiseRequesetGameInit() { RequestGameInit?.Invoke(); }
+
+    }
     public class GameManager : MonoBehaviour
     {
         public static GameManager instance;
-        MySceneManager sceneMgr;
-        SoundManager soundMgr;
+        [SerializeField] private MySceneManager sceneMgr;
+        [SerializeField] private SoundManager soundMgr;
+        GameManagerEvent gameMgrEvent;
         private void Awake()
         {
             if (instance != null) Destroy(gameObject);
 
             instance = this;
+            gameMgrEvent = new GameManagerEvent();
             DontDestroyOnLoad(gameObject);
         }
         void Start()
         {
-            sceneMgr = GetComponent<MySceneManager>();
-            soundMgr = GetComponent<SoundManager>();
+            GameInit();
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -32,6 +39,16 @@ namespace ReadingStrike.Manager
             else if (Input.GetKeyDown(KeyCode.Alpha3))
                 SceneChange(2);
         }
+        #region Game 시작 시 함수
+        void GameInit()
+        {
+            gameMgrEvent.RaiseRequesetGameInit();
+        }
+        #endregion
+        #region Event 관련 함수
+        public void AddRequestGameInit(Action func) { gameMgrEvent.RequestGameInit += func; }
+        public void AddRequestSceneChange(Action<int> func) { sceneMgr.AddRequestSceneChange(func); }
+        #endregion
         #region SceneChange 함수
         void SceneChange(int index)
         {
