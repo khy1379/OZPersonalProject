@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,13 +12,20 @@ namespace ReadingStrike.Manager
         Village,
         Dungeon
     }
+    public class SceneChangeEvent
+    {
+        public event Action<int> RequestSceneChange;
+        public void RaiseRequesetSceneChange(int sceneNum) { RequestSceneChange?.Invoke(sceneNum); }
+    }
     public class MySceneManager : MonoBehaviour
     {
         public bool isSceneChanging;
         public SceneType sceneType;
+        SceneChangeEvent changeEvent;
         void Awake()
         {
             sceneType = SceneType.Title;
+            changeEvent = new SceneChangeEvent();
         }
         public void SceneChangeStartCo(int index)
         {
@@ -32,6 +40,7 @@ namespace ReadingStrike.Manager
 
             isSceneChanging = false;
             Debug.Log(SceneManager.GetActiveScene().name);
+            changeEvent.RaiseRequesetSceneChange(index);
         }
         bool IsSceneChangePossible(int index)
         {
@@ -48,5 +57,6 @@ namespace ReadingStrike.Manager
             else
                 return true;
         }
+        public void AddRequestSceneChange(Action<int> func) { changeEvent.RequestSceneChange += func; }
     }
 }

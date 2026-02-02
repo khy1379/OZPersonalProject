@@ -427,8 +427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 0.015686275}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -460,6 +460,56 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 656238387988280716, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 668075886021638394, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 796445062489258014, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1118367110873840473, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2258250449572876371, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: bgmList.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2620227441492304309, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755654090484202384, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224884908552244699, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738575892439600299, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7290770172165795113, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8074075023899633866, guid: 60d8649214c2e494c8881f808c92b81c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -514,6 +564,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 9161182786688018461, guid: 60d8649214c2e494c8881f808c92b81c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -601,7 +656,7 @@ GameObject:
   - component: {fileID: 2040215454}
   - component: {fileID: 2040215453}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: TitleUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -696,6 +751,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 330585546}
   - {fileID: 410087041}
-  - {fileID: 676745727}
   - {fileID: 2040215456}
+  - {fileID: 676745727}
   - {fileID: 1713454545}
