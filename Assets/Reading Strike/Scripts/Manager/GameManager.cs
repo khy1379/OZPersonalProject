@@ -7,8 +7,7 @@ namespace ReadingStrike.Manager
 {
     public class GameManagerEvent
     {
-        public event Action RequestGameInit;
-        public void RaiseRequesetGameInit() { RequestGameInit?.Invoke(); }
+
 
     }
     public class GameManager : MonoBehaviour
@@ -16,13 +15,12 @@ namespace ReadingStrike.Manager
         public static GameManager instance;
         [SerializeField] private MySceneManager sceneMgr;
         [SerializeField] private SoundManager soundMgr;
-        GameManagerEvent gameMgrEvent;
+        GameManagerEvent gameMgrEvent = new GameManagerEvent();
         private void Awake()
         {
             if (instance != null) Destroy(gameObject);
 
             instance = this;
-            gameMgrEvent = new GameManagerEvent();
             DontDestroyOnLoad(gameObject);
         }
         void Start()
@@ -42,11 +40,10 @@ namespace ReadingStrike.Manager
         #region Game 시작 시 함수
         void GameInit()
         {
-            gameMgrEvent.RaiseRequesetGameInit();
+            soundMgr.Init();
         }
         #endregion
         #region Event 관련 함수
-        public void AddRequestGameInit(Action func) { gameMgrEvent.RequestGameInit += func; }
         public void AddRequestSceneChange(Action<int> func) { sceneMgr.AddRequestSceneChange(func); }
         #endregion
         #region SceneChange 함수
