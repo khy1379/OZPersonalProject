@@ -18,7 +18,11 @@ namespace ReadingStrike.Manager
         GameManagerEvent gameMgrEvent = new GameManagerEvent();
         private void Awake()
         {
-            if (instance != null) Destroy(gameObject);
+            if (instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
 
             instance = this;
             DontDestroyOnLoad(gameObject);
