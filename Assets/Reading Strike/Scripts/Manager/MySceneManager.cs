@@ -20,13 +20,8 @@ namespace ReadingStrike.Manager
     public class MySceneManager : MonoBehaviour
     {
         public bool isSceneChanging;
-        public SceneType sceneType;
-        SceneChangeEvent changeEvent;
-        void Awake()
-        {
-            sceneType = SceneType.Title;
-            changeEvent = new SceneChangeEvent();
-        }
+        public SceneType sceneType = SceneType.Title;
+        SceneChangeEvent changeEvent = new SceneChangeEvent();
         public void SceneChangeStartCo(int index)
         {
             StartCoroutine(SceneChangeCo(index));
@@ -54,8 +49,7 @@ namespace ReadingStrike.Manager
                 Debug.Log("같은 Scene으로 이동 불가");
                 return false;
             }
-            else
-                return true;
+            else return true;
         }
         public void AddRequestSceneChange(Action<int> func) { changeEvent.RequestSceneChange += func; }
     }

@@ -70,11 +70,7 @@ namespace ReadingStrike.Manager
         [SerializeField] private AudioSource bgmSource;
         [SerializeField] private List<AudioClip> bgmList;
         [SerializeField] private List<Volume> volumeList;
-        private void Awake()
-        {
-            GameManager.instance.AddRequestGameInit(Init);
-        }
-        void Init()
+        public void Init()
         {
             BGMChange(0);
             Volume.MixerSet(mixer);
