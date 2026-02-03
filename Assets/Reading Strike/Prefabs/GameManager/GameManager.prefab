@@ -2580,22 +2580,19 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0af4c0ffa64da2c4dbf72894e31a2401, type: 3}
   - {fileID: 8300000, guid: 3ef76e8970f474f429073750dab2a322, type: 3}
   - {fileID: 8300000, guid: 51fc5b2a1e9dca74fa66fcea4419b189, type: 3}
-  audioGroupSetList:
-  - data:
-      type: 0
-      volume: 0
-      isMute: 0
+  volumeList:
+  - type: 0
+    volume: 0
+    isMute: 0
     slider: {fileID: 4346178392002417376}
     muteToggle: {fileID: 6559099489021653955}
-  - data:
-      type: 1
-      volume: 0
-      isMute: 0
+  - type: 1
+    volume: 0
+    isMute: 0
     slider: {fileID: 4335485686429871359}
     muteToggle: {fileID: 987875399818809235}
-  - data:
-      type: 2
-      volume: 0
-      isMute: 0
+  - type: 2
+    volume: 0
+    isMute: 0
     slider: {fileID: 646556516004413587}
     muteToggle: {fileID: 2862868319833423421}

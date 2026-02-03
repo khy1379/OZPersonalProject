@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -16,86 +17,75 @@ namespace ReadingStrike.Manager
             SFX
         }
         [Serializable]
-        public struct VolumeValueData
+        public class Volume
         {
             public AudioType type;
             public float volume;
             public bool isMute;
-            public VolumeValueData(AudioType type, float volume, bool isMute)
-            {
-                this.type = type;
-                this.volume = volume;
-                this.isMute = isMute;
-            }
-        }
-        [Serializable]
-        public class AudioGroupSet
-        {
-            public VolumeValueData data;
             public Slider slider;
             public Toggle muteToggle;
+            static public AudioMixer mixer;
+            public static void MixerSet(AudioMixer mixer)
+            {
+                Volume.mixer = mixer;
+            }
             public void Init(AudioMixer mixer)
             {
+                volume = SaveLoadManager.LoadDataPlF($"{type.ToString()}_Vol", 0.5f);
+                isMute = SaveLoadManager.LoadDataPlB($"{type.ToString()}_Mute", false);
                 if (slider != null)
                 {
-                    slider.value = data.volume;
-                    VolumeSliderControl(mixer, data.volume);
-                    slider.onValueChanged.AddListener((float value) => VolumeSliderControl(mixer, value));
+                    slider.value = volume;
+                    VolumeSliderControl(volume);
+                    slider.onValueChanged.AddListener((value) => VolumeSliderControl(value));
                 }
                 if (muteToggle != null)
                 {
-                    muteToggle.isOn = data.isMute;
-                    MuteToggleControl(mixer, data.isMute);
-                    muteToggle.onValueChanged.AddListener((bool isMute) => MuteToggleControl(mixer, isMute));
+                    muteToggle.isOn = isMute;
+                    MuteToggleControl(isMute);
+                    muteToggle.onValueChanged.AddListener((isMute) => MuteToggleControl(isMute));
                 }
             }
-            public void LoadData(VolumeValueData loadData) { data = loadData; }
-            public void VolumeSliderControl(AudioMixer mixer, float value)
+            public void VolumeSliderControl(float value)
             {
-                data.volume = value;
-                if(!data.isMute)
-                {
-                    VolumeSet(mixer, value);
-                }
+                volume = value;
+                SaveLoadManager.SaveDataPlF($"{type.ToString()}_Vol", value);
+                if (!isMute) { VolumeSet(value); }
             }
-            void VolumeSet(AudioMixer mixer, float value)
+            void VolumeSet(float value)
             {
                 float db = Mathf.Log10(Mathf.Max(0.0001f, value)) * 20;
-                mixer.SetFloat(data.type.ToString(), db);
+                mixer.SetFloat(type.ToString(), db);
             }
-            public void MuteToggleControl(AudioMixer mixer, bool isToggle)
+            public void MuteToggleControl(bool isToggle)
             {
-                data.isMute = isToggle;
-                if(isToggle)
-                {
-                    VolumeSet(mixer, 0.0001f);
-                }
-                else
-                {
-                    VolumeSet(mixer, data.volume);
-                }
+                isMute = isToggle;
+                SaveLoadManager.SaveDataPlB($"{type.ToString()}_Mute", isToggle);
+                if (isToggle) { VolumeSet(0.0001f); }
+                else { VolumeSet(volume); }
             }
         }
 
         [SerializeField] private AudioMixer mixer;
         [SerializeField] private AudioSource bgmSource;
         [SerializeField] private List<AudioClip> bgmList;
-        [SerializeField] private List<AudioGroupSet> audioGroupSetList;
+        [SerializeField] private List<Volume> volumeList;
         private void Awake()
         {
             GameManager.instance.AddRequestGameInit(Init);
         }
-        void Init() 
+        void Init()
         {
-            BGMChange(0); 
-
-            if(mixer!=null)
+            BGMChange(0);
+            Volume.MixerSet(mixer);
+            if (mixer != null)
             {
-                foreach(AudioGroupSet audio in audioGroupSetList)
+                for(int i = 0; i < volumeList.Count; i++)
                 {
-                    audio.Init(mixer);
+                    volumeList[i].Init(mixer);
                 }
             }
+
             GameManager.instance.AddRequestSceneChange(BGMChange);
         }
         public void BGMChange(int index)
@@ -107,7 +97,7 @@ namespace ReadingStrike.Manager
         }
         bool IsBGMChangePossible(int index)
         {
-            if(bgmList.Count <= index)
+            if (bgmList.Count <= index)
             {
                 Debug.Log("없는 번호의 bgm입니다.");
                 return false;
@@ -120,5 +110,6 @@ namespace ReadingStrike.Manager
             else
                 return true;
         }
+
     }
 }
