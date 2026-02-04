@@ -1,19 +1,11 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ReadingStrike.Manager
 {
-    public enum SceneType
-    {
-        Title,
-        Village,
-        Dungeon
-    }
     public class SceneChangeEvent
     {
         public event Action<int> RequestSceneChange;
