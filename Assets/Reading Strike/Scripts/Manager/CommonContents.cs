@@ -10,6 +10,12 @@ namespace ReadingStrike.Manager
         Village,
         Dungeon
     }
+    public enum SkillType
+    {
+        NormalAtk,
+        StrongAtk,
+        Defense
+    }
     public class CommonContents 
     {
 
