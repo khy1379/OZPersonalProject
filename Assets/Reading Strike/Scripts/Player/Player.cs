@@ -3,6 +3,7 @@ using ReadingStrike.Monster;
 using ReadingStrike.Skill;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 namespace ReadingStrike.Player
 {
@@ -17,17 +18,15 @@ namespace ReadingStrike.Player
         private float y, z;
         public float speed = 10;
         [SerializeField] private int hp = 100;
-        public int Hp 
-        { 
+        public int Hp
+        {
             get { return hp; }
             set
             {
                 hp = value;
-                if(hp < 0)
-                {
-                    hp = 0;
-                    Destroy(gameObject);
-                }
+                if (hp <= 0) hp = 0;
+                tmp.text = $"{hp}";
+                if (hp == 0) Destroy(gameObject);
             }
         }
         [SerializeField] private int atk = 10;
@@ -35,7 +34,7 @@ namespace ReadingStrike.Player
         private bool isMouseMove = false;
         [SerializeField] Vector3 mouseMovePos = Vector3.zero;
         public float mouseMoveDis = 0;
-
+        public TextMeshProUGUI tmp;
         void Update()
         {
             InputKey();
@@ -48,6 +47,7 @@ namespace ReadingStrike.Player
         }
         void SkillUseSearching()
         {
+            if (!IsSkillCharged) return;
             if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, monLm))
             {
                 BattleManager.BattleStart(this, hit.collider.GetComponent<Monster.Monster>(), 1);
