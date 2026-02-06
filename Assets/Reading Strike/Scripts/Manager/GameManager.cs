@@ -23,7 +23,7 @@ namespace ReadingStrike.Manager
                 Destroy(gameObject);
                 return;
             }
-
+            Application.targetFrameRate = 60;
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
