@@ -4,6 +4,7 @@ using ReadingStrike.Skill;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using TMPro;
 using UnityEngine;
 namespace ReadingStrike.Monster
 {
@@ -28,14 +29,13 @@ namespace ReadingStrike.Monster
             set
             {
                 hp = value;
-                if (hp < 0)
-                {
-                    hp = 0;
-                    Destroy(gameObject);
-                }
+                if (hp <= 0) hp = 0;
+                tmp.text = $"{hp}";
+                if (hp == 0) Destroy(gameObject);
             }
         }
         [SerializeField] private int atk = 10;
+        public TextMeshProUGUI tmp;
         public int Atk { get { return atk; } }
 
         #endregion
@@ -111,7 +111,7 @@ namespace ReadingStrike.Monster
         }
         void SkillUseSearching()
         {
-            if(Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, plLm))
+            if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, plLm))
             {
                 BattleManager.BattleStart(hit.collider.GetComponent<Player.Player>(), this, 1);
             }
