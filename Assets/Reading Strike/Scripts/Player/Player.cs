@@ -1,8 +1,8 @@
 ﻿using ReadingStrike.Manager;
-using ReadingStrike.Monster;
 using ReadingStrike.Skill;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 namespace ReadingStrike.Player
@@ -17,7 +17,10 @@ namespace ReadingStrike.Player
         //[SerializeField] private Animator anim;
         private float y, z;
         public float speed = 10;
+        [SerializeField] private int maxHp = 100;
         [SerializeField] private int hp = 100;
+        bool isDeath;
+        CancellationTokenSource cts;
         public int Hp
         {
             get { return hp; }
@@ -26,7 +29,13 @@ namespace ReadingStrike.Player
                 hp = value;
                 if (hp <= 0) hp = 0;
                 tmp.text = $"{hp}";
-                if (hp == 0) Destroy(gameObject);
+                Stifness();
+                if (Hp == 0 && !isDeath)
+                {
+                    isDeath = true;
+                    anim.SetTrigger("Death");
+                    //Destroy(gameObject);
+                }
             }
         }
         [SerializeField] private int atk = 10;
@@ -35,6 +44,7 @@ namespace ReadingStrike.Player
         [SerializeField] Vector3 mouseMovePos = Vector3.zero;
         public float mouseMoveDis = 0;
         public TextMeshProUGUI tmp;
+        [SerializeField] private Animator anim;
         void Update()
         {
             InputKey();
@@ -57,26 +67,63 @@ namespace ReadingStrike.Player
         {
             y = Input.GetAxisRaw("Horizontal");
             z = Input.GetAxisRaw("Vertical");
+            if(Input.GetKey(KeyCode.W))
+            {
+                anim.SetInteger("Speed", 1);
+            }
+            else if(Input.GetKey(KeyCode.S))
+            {
+                anim.SetInteger("Speed", -1);
+            }
+            else
+            {
+                anim.SetInteger("Speed", 0);
+            }
             if (z > 0 || y > 0) isMouseMove = false;
-            if (Input.GetKeyDown(KeyCode.Z))
+
+            if (anim.GetBool("InBattle"))
             {
-                sc.SkillCharging(0);
+                if (Input.GetKeyDown(KeyCode.Z))
+                {
+                    sc.SkillCharging(0);
+                    anim.SetTrigger("NormalAtk");
+                }
+                else if (Input.GetKeyDown(KeyCode.X))
+                {
+                    sc.SkillCharging(1);
+                    anim.SetTrigger("StrongAtk");
+                }
+                else if (Input.GetKeyDown(KeyCode.C))
+                {
+                    sc.SkillCharging(2);
+                    anim.SetTrigger("Defense");
+                }
+                else if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    sc.SkillCancel();
+                }
+                else if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    anim.SetBool("InBattle", false);
+                    anim.SetLayerWeight(1, 0);
+                }
+                else if (Input.GetKeyDown(KeyCode.E))
+                {
+                    PlHit(10);
+                }
             }
-            else if (Input.GetKeyDown(KeyCode.X))
+            else
             {
-                sc.SkillCharging(1);
-            }
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                sc.SkillCharging(2);
-            }
-            else if (Input.GetKeyDown(KeyCode.Q))
-            {
-                sc.SkillCancel();
-            }
-            else if (Input.GetMouseButtonDown(0))
-            {
-                //InputPoint();
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    anim.SetBool("InBattle", true);
+                    anim.SetLayerWeight(1, 1);
+                    if (isDeath)
+                    {
+                        Hp = maxHp;
+                        anim.Play("HumanM@CombatIdle1H01", 1);
+                    }
+                }
             }
         }
         void InputKeyMove()
@@ -112,16 +159,13 @@ namespace ReadingStrike.Player
         }
         public void PlHit(int damage)
         {
+            if (sc.IsStifness) return;
+            anim.SetTrigger("Damaged");
             Hp -= damage;
-            Stifness();
-            if (Hp < 0)
-            {
-                Destroy(gameObject);
-            }
         }
         public void Stifness()
         {
-            sc.StartStifnessTask();
+            sc.StartStifnessTask(cts);
         }
         public bool CurSkillUse()
         {

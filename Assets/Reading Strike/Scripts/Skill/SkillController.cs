@@ -3,6 +3,7 @@ using ReadingStrike.Manager;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 namespace ReadingStrike.Skill
@@ -94,16 +95,32 @@ namespace ReadingStrike.Skill
             IsSkillCharged = false;
             rend.material.color = Color.white;
         }
-        async UniTaskVoid StifnessTask()
+        async UniTaskVoid StifnessTask(CancellationTokenSource cts)
         {
-            SkillReset();
-            IsStifness = true;
-            await UniTask.Delay((int)(CurSkill.stifnessTime * 1000));
-            IsStifness = false;
+            try
+            {
+                if(cts == null)
+                {
+                    cts = new CancellationTokenSource();
+                }
+                SkillReset();
+                IsStifness = true;
+                await UniTask.Delay((int)(CurSkill.stifnessTime * 1000));
+            }
+            catch
+            {
+                cts.Cancel();
+                cts.Dispose();
+                cts = null;
+            }
+            finally
+            {
+                IsStifness = false;
+            }
         }
-        public void StartStifnessTask()
+        public void StartStifnessTask(CancellationTokenSource cts)
         {
-            StifnessTask().Forget();
+            StifnessTask(cts).Forget();
         }
         async UniTaskVoid CooltimeTask()
         {
