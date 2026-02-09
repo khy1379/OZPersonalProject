@@ -16,6 +16,12 @@ namespace ReadingStrike.Manager
         StrongAtk,
         Defense
     }
+    public enum BattleResultType
+    {
+        PlayerWin,
+        MonsterWin,
+        Draw
+    }
     public class CommonContents 
     {
 

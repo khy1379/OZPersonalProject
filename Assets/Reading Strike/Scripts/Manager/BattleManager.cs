@@ -1,45 +1,62 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace ReadingStrike.Manager
 {
     public static class BattleManager
     {
+        public static event Action<BattleResultType> RequestBattleResult;
+        public static void RaiseBattleResult(BattleResultType battleResult)
+        {
+            RequestBattleResult?.Invoke(battleResult);
+        }
         public static void BattleStart(Player.Player pl, Monster.Monster mon, float stifnessTime)
         {
             if (pl.IsSkillCharged && mon.IsSkillCharged)
             {
                 switch (BattleResult(pl.ChargedSkill.type, mon.ChargedSkill.type))
                 {
-                    case 0:
+                    case BattleResultType.Draw:
                         pl.Stifness();
                         mon.Stifness();
+                        RaiseBattleResult(BattleResultType.Draw);
                         break;
-                    case 1:
+                    case BattleResultType.PlayerWin:
                         if(pl.CurSkillUse())
                         {
                             mon.MonHit(pl.Atk);
+                            RaiseBattleResult(BattleResultType.PlayerWin);
                         }
                         break;
-                    case -1:
+                    case BattleResultType.MonsterWin:
                         if(mon.CurSkillUse())
                         {
                             pl.PlHit(mon.Atk);
+                            RaiseBattleResult(BattleResultType.MonsterWin);
                         }
                         break;
                 }
             }
             else if(pl.IsSkillCharged && !mon.IsSkillCharged)
             {
-                if(pl.CurSkillUse()) mon.MonHit(pl.Atk);
+                if (pl.CurSkillUse())
+                {
+                    mon.MonHit(pl.Atk);
+                    RaiseBattleResult(BattleResultType.PlayerWin);
+                }
             }
             else if(!pl.IsSkillCharged && mon.IsSkillCharged)
             {
-                if(mon.CurSkillUse()) pl.PlHit(mon.Atk);
+                if (mon.CurSkillUse())
+                {
+                    pl.PlHit(mon.Atk);
+                    RaiseBattleResult(BattleResultType.MonsterWin);
+                }
             }
             Debug.Log("전투 종료");
         }
-        static int BattleResult(SkillType plSkillType, SkillType monSkillType)
+        static BattleResultType BattleResult(SkillType plSkillType, SkillType monSkillType)
         {
             switch (plSkillType)
             {
@@ -47,31 +64,31 @@ namespace ReadingStrike.Manager
                     switch (monSkillType)
                     {
                         case SkillType.StrongAtk:
-                            return 0;
+                            return BattleResultType.Draw;
                         case SkillType.Defense:
-                            return 1;
+                            return BattleResultType.PlayerWin;
                         default:
-                            return -1;
+                            return BattleResultType.MonsterWin;
                     }
                 case SkillType.Defense:
                     switch (monSkillType)
                     {
                         case SkillType.StrongAtk:
-                            return -1;
+                            return BattleResultType.MonsterWin;
                         case SkillType.Defense:
-                            return 0;
+                            return BattleResultType.Draw;
                         default:
-                            return 1;
+                            return BattleResultType.PlayerWin;
                     }
                 default:
                     switch (monSkillType)
                     {
                         case SkillType.StrongAtk:
-                            return 1;
+                            return BattleResultType.PlayerWin;
                         case SkillType.Defense:
-                            return -1;
+                            return BattleResultType.MonsterWin;
                         default:
-                            return 0;
+                            return BattleResultType.Draw;
                     }
             }
         }

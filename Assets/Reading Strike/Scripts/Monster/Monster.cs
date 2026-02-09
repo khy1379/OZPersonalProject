@@ -19,7 +19,7 @@ namespace ReadingStrike.Monster
         [SerializeField] private Collider[] searchedPl = new Collider[1];
         [SerializeField] private bool isPlSearched = false;
         [SerializeField] private bool isSkillChargingTaskStart = false;
-        [SerializeField] private CancellationTokenSource tokenS;
+        [SerializeField] private CancellationTokenSource cts;
         #region 상속 대상
         [SerializeField] protected float searchRadius = 5f;
         [SerializeField] private int hp = 100;
@@ -89,7 +89,7 @@ namespace ReadingStrike.Monster
         void StartSkillCharhingTask()
         {
             SkillChgargingTaskCancel();
-            tokenS = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             SkillChgargingTask().Forget();
         }
         async UniTaskVoid SkillChgargingTask()
@@ -100,7 +100,7 @@ namespace ReadingStrike.Monster
                 while (isPlSearched)
                 {
                     sc.SkillCharging(Random.Range(1, sc.SkillCount));
-                    await UniTask.Delay(1000, cancellationToken: tokenS.Token);
+                    await UniTask.Delay(1000, cancellationToken: cts.Token);
                 }
             }
             finally
@@ -118,11 +118,11 @@ namespace ReadingStrike.Monster
         }
         void SkillChgargingTaskCancel()
         {
-            if (tokenS == null) return;
+            if (cts == null) return;
 
-            tokenS.Cancel();
-            tokenS.Dispose();
-            tokenS = null;
+            cts.Cancel();
+            cts.Dispose();
+            cts = null;
         }
         public void MonHit(int damage)
         {
@@ -135,7 +135,7 @@ namespace ReadingStrike.Monster
         }
         public void Stifness()
         {
-            sc.StartStifnessTask();
+            sc.StartStifnessTask(cts);
             SkillChgargingTaskCancel();
         }
         public bool CurSkillUse()
