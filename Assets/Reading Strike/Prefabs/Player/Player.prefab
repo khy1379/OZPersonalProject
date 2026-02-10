@@ -64,6 +64,61 @@ Transform:
   - {fileID: 4555658347700072685}
   m_Father: {fileID: 2637544106753434261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 270}
+--- !u!1 &6867833456515383968
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5733569523364471428}
+  - component: {fileID: 330376662112307354}
+  m_Layer: 6
+  m_Name: PlayerCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5733569523364471428
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6867833456515383968}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7593126450491460950}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &330376662112307354
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6867833456515383968}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!1 &8065883279171362296
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +153,7 @@ Transform:
   m_Children:
   - {fileID: 5696081621137576829}
   - {fileID: 5435454309318439830}
+  - {fileID: 5733569523364471428}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4748014836324252111
@@ -118,12 +174,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   speed: 10
+  maxHp: 100
   hp: 100
   atk: 10
   mouseMovePos: {x: 0, y: 0, z: 0}
   mouseMoveDis: 0
   tmp: {fileID: 0}
-  anim: {fileID: 0}
+  anim: {fileID: 1868044806349162759}
 --- !u!114 &238394878605303779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,6 +430,12 @@ PrefabInstance:
       addedObject: {fileID: 744927301993368773}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24fc2c3e62c52bf4e9e63fd980b8e85d, type: 3}
+--- !u!95 &1868044806349162759 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 24fc2c3e62c52bf4e9e63fd980b8e85d,
+    type: 3}
+  m_PrefabInstance: {fileID: 5225923187144144022}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2637544106753434261 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7790177421927552515, guid: 24fc2c3e62c52bf4e9e63fd980b8e85d,

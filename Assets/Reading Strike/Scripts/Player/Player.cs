@@ -27,15 +27,9 @@ namespace ReadingStrike.Player
             set
             {
                 hp = value;
-                if (hp <= 0) hp = 0;
+                if (hp < 0) hp = 0;
+                else if (maxHp < hp) hp = maxHp;
                 tmp.text = $"{hp}";
-                Stifness();
-                if (Hp == 0 && !isDeath)
-                {
-                    isDeath = true;
-                    anim.SetTrigger("Death");
-                    //Destroy(gameObject);
-                }
             }
         }
         [SerializeField] private int atk = 10;
@@ -67,17 +61,17 @@ namespace ReadingStrike.Player
         {
             y = Input.GetAxisRaw("Horizontal");
             z = Input.GetAxisRaw("Vertical");
-            if(Input.GetKey(KeyCode.W))
+            if (Input.GetKey(KeyCode.W))
             {
-                anim.SetInteger("Speed", 1);
+                anim.SetFloat("Speed", 1);
             }
-            else if(Input.GetKey(KeyCode.S))
+            else if (Input.GetKey(KeyCode.S))
             {
-                anim.SetInteger("Speed", -1);
+                anim.SetFloat("Speed", -1);
             }
             else
             {
-                anim.SetInteger("Speed", 0);
+                anim.SetFloat("Speed", 0);
             }
             if (z > 0 || y > 0) isMouseMove = false;
 
@@ -105,7 +99,6 @@ namespace ReadingStrike.Player
                 else if (Input.GetKeyDown(KeyCode.Space))
                 {
                     anim.SetBool("InBattle", false);
-                    anim.SetLayerWeight(1, 0);
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
@@ -117,7 +110,6 @@ namespace ReadingStrike.Player
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     anim.SetBool("InBattle", true);
-                    anim.SetLayerWeight(1, 1);
                     if (isDeath)
                     {
                         Hp = maxHp;
@@ -159,9 +151,19 @@ namespace ReadingStrike.Player
         }
         public void PlHit(int damage)
         {
-            if (sc.IsStifness) return;
-            anim.SetTrigger("Damaged");
+            if (sc.IsStifness || isDeath) return;
             Hp -= damage;
+            if (Hp == 0)
+            {
+                isDeath = true;
+                anim.SetTrigger("Death");
+                //Destroy(gameObject);
+            }
+            else if (0 < Hp)
+            {
+                Stifness();
+                anim.SetTrigger("Damaged");
+            }
         }
         public void Stifness()
         {
@@ -175,6 +177,12 @@ namespace ReadingStrike.Player
         {
             Gizmos.color = Color.blue;
             if (IsSkillCharged) Gizmos.DrawLine(rb.position, rb.position + rb.transform.forward * sc.searchedDistance);
+        }
+        bool CheckMovingPossible()
+        {
+            if (sc.IsStifness) return true;
+
+            return false;
         }
     }
 }
