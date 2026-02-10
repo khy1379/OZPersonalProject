@@ -24,17 +24,26 @@ namespace ReadingStrike.Skill
         [SerializeField] List<SkillSet> skillSetList;
         public List<SkillSet> SkillSetList { get { return skillSetList; } }
         public SkillSet CurSkill { get; private set; }
-        public Color CurColor { get { return rend.material.color; } }
-        [SerializeField] private MeshRenderer rend;
         [SerializeField] public int SkillCount { get { return skillSetList.Count; } }
+        [SerializeField] private MeshRenderer skillOrbRend;
         public bool IsSkillCharged { get; private set; }
         public bool IsStifness { get; private set; }
-        bool isAnounceSkillCancelState = false;
         public float searchedDistance = 1f;
+        CancellationTokenSource cts;
         private void Start()
         {
-            rend.material.color = Color.white;
+            SkillControllerInit();
+        }
+        void SkillControllerInit()
+        {
+            IsSkillCharged = false;
+            IsStifness = false;
             if (CurSkill == null && SkillSetList != null) CurSkill = SkillSetList[0];
+            if (skillOrbRend != null && !skillOrbRend.gameObject.activeSelf)
+            {
+                skillOrbRend.gameObject.SetActive(true);
+                skillOrbRend.material.color = Color.white;
+            }
         }
         public void SkillCharging(int index)
         {
@@ -59,8 +68,7 @@ namespace ReadingStrike.Skill
                 return;
             }
             CurSkill = skillSetList[index];
-            isAnounceSkillCancelState = false;
-            rend.material.color = skillSetList[index].color;
+            skillOrbRend.material.color = skillSetList[index].color;
             IsSkillCharged = true;
             Debug.Log($"{index}번 스킬 차징");
         }
@@ -69,11 +77,6 @@ namespace ReadingStrike.Skill
         {
             if (!IsSkillCharged)
             {
-                if (!isAnounceSkillCancelState)
-                {
-                    Debug.LogWarning("스킬 차징된 상태가 아님");
-                    isAnounceSkillCancelState = true;
-                }
                 return;
             }
             SkillReset();
@@ -94,7 +97,7 @@ namespace ReadingStrike.Skill
         void SkillReset()
         {
             IsSkillCharged = false;
-            rend.material.color = Color.white;
+            skillOrbRend.material.color = Color.white;
         }
         async UniTaskVoid StifnessTask(CancellationTokenSource cts)
         {
@@ -106,7 +109,9 @@ namespace ReadingStrike.Skill
                 }
                 SkillReset();
                 IsStifness = true;
-                await UniTask.Delay((int)(CurSkill.stifnessTime * 1000));
+                skillOrbRend.material.color = Color.gray;
+                float awaitTime = IsSkillCharged ? CurSkill.stifnessTime : SkillSetList[0].stifnessTime;
+                await UniTask.Delay((int)(awaitTime * 1000), cancellationToken: cts.Token);
             }
             catch
             {
@@ -116,23 +121,45 @@ namespace ReadingStrike.Skill
             }
             finally
             {
+                skillOrbRend.material.color = Color.white;
                 IsStifness = false;
             }
         }
-        public void StartStifnessTask(CancellationTokenSource cts)
+        public void StartStifnessTask()
         {
             StifnessTask(cts).Forget();
         }
-        async UniTaskVoid CooltimeTask()
+        async UniTaskVoid CooltimeTask(CancellationTokenSource cts)
         {
             SkillSet temp = CurSkill;
-            temp.isCooltime = true;
-            await UniTask.Delay((int)(temp.cooltime * 1000));
-            temp.isCooltime = false;
+            try
+            {
+                if (cts == null)
+                {
+                    cts = new CancellationTokenSource();
+                }
+                temp.isCooltime = true;
+                await UniTask.Delay((int)(temp.cooltime * 1000), cancellationToken : cts.Token);
+            }
+            catch
+            {
+                cts.Cancel();
+                cts.Dispose();
+                cts = null;
+            }
+            finally
+            {
+                temp.isCooltime = false;
+            }
         }
         void StartCooltimeTask()
         {
-            CooltimeTask().Forget();
+            CooltimeTask(cts).Forget();
+        }
+        public void OrbSetFalse()
+        {
+            skillOrbRend.material.color = Color.gray;
+            skillOrbRend.gameObject.SetActive(false);
         }
     }
 }

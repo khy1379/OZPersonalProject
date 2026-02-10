@@ -19,7 +19,7 @@ namespace ReadingStrike.Monster
         [SerializeField] private Collider[] searchedPl = new Collider[1];
         [SerializeField] private bool isPlSearched = false;
         [SerializeField] private bool isSkillChargingTaskStart = false;
-        [SerializeField] private CancellationTokenSource cts;
+        CancellationTokenSource cts;
         #region 상속 대상
         [SerializeField] protected float searchRadius = 5f;
         [SerializeField] private int hp = 100;
@@ -135,7 +135,7 @@ namespace ReadingStrike.Monster
         }
         public void Stifness()
         {
-            sc.StartStifnessTask(cts);
+            sc.StartStifnessTask();
             SkillChgargingTaskCancel();
         }
         public bool CurSkillUse()
