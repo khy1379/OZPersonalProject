@@ -20,7 +20,6 @@ namespace ReadingStrike.Player
         [SerializeField] private int maxHp = 100;
         [SerializeField] private int hp = 100;
         bool isDeath;
-        CancellationTokenSource cts;
         public int Hp
         {
             get { return hp; }
@@ -113,7 +112,6 @@ namespace ReadingStrike.Player
                     if (isDeath)
                     {
                         Hp = maxHp;
-                        anim.Play("HumanM@CombatIdle1H01", 1);
                     }
                 }
             }
@@ -157,7 +155,7 @@ namespace ReadingStrike.Player
             {
                 isDeath = true;
                 anim.SetTrigger("Death");
-                //Destroy(gameObject);
+                sc.OrbSetFalse();
             }
             else if (0 < Hp)
             {
@@ -167,7 +165,7 @@ namespace ReadingStrike.Player
         }
         public void Stifness()
         {
-            sc.StartStifnessTask(cts);
+            sc.StartStifnessTask();
         }
         public bool CurSkillUse()
         {
