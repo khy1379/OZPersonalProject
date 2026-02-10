@@ -34,6 +34,7 @@ namespace ReadingStrike.Skill
         private void Start()
         {
             rend.material.color = Color.white;
+            if (CurSkill == null && SkillSetList != null) CurSkill = SkillSetList[0];
         }
         public void SkillCharging(int index)
         {
@@ -99,7 +100,7 @@ namespace ReadingStrike.Skill
         {
             try
             {
-                if(cts == null)
+                if (cts == null)
                 {
                     cts = new CancellationTokenSource();
                 }
