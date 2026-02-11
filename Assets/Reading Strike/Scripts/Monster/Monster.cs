@@ -142,11 +142,11 @@ namespace ReadingStrike.Monster
         {
             return sc.SkillUse();
         }
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, searchRadius);
-            //Gizmos.DrawLine(rb.position, rb.position + rb.transform.forward * sc.searchedDistance);
-        }
+        //private void OnDrawGizmos()
+        //{
+        //    Gizmos.color = Color.red;
+        //    Gizmos.DrawWireSphere(transform.position, searchRadius);
+        //    //Gizmos.DrawLine(rb.position, rb.position + rb.transform.forward * sc.searchedDistance);
+        //}
     }
 }

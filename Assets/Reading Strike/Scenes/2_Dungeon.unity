@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 5, z: -10}
+  m_FollowOffset: {x: 2, y: 1.5, z: -5}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -304,9 +304,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.22975296, y: 0.0000000071969417, z: -0.0000000016989675,
-    w: 0.973249}
-  m_LocalPosition: {x: 0, y: 4.5, z: -10}
+  m_LocalRotation: {x: 0.132968, y: -0.18736577, z: 0.025607295, w: 0.9729121}
+  m_LocalPosition: {x: 2, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -514,6 +513,80 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8724276312971972587}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &821879762
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4059089237314317328, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_Name
+      value: Goblin_Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.235002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7549905169795070379, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 717f954216f714a4a89c83d01bd308fc,
+        type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a1a26234bcf12d946bd94b88b75eb80e, type: 3}
 --- !u!1001 &1072681673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -629,7 +702,7 @@ GameObject:
   - component: {fileID: 1163995813}
   - component: {fileID: 1163995812}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: MonsterHP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -764,7 +837,7 @@ GameObject:
   - component: {fileID: 1167117442}
   - component: {fileID: 1167117441}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PlayerHPValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -898,7 +971,7 @@ GameObject:
   - component: {fileID: 1234499055}
   - component: {fileID: 1234499054}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MonsterHPValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1150,7 +1223,7 @@ GameObject:
   - component: {fileID: 1440489552}
   - component: {fileID: 1440489551}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: PlayerHP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1337,8 +1410,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1915763200}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.22975293, y: 0.000000007196941, z: -0.0000000016989676, w: 0.973249}
-  m_LocalPosition: {x: 0, y: 4.5, z: -10}
+  m_LocalRotation: {x: 0.13296798, y: -0.18736574, z: 0.025607292, w: 0.9729121}
+  m_LocalPosition: {x: 2, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1679,6 +1752,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: 4783622c92246fa49b563a34ae42d29a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: 4783622c92246fa49b563a34ae42d29a,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: 4783622c92246fa49b563a34ae42d29a,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5552755857552505245, guid: 4783622c92246fa49b563a34ae42d29a,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 5881394606203803942, guid: 4783622c92246fa49b563a34ae42d29a,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1689,6 +1782,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monster
       objectReference: {fileID: 0}
+    - target: {fileID: 7510652561415931319, guid: 4783622c92246fa49b563a34ae42d29a,
+        type: 3}
+      propertyPath: tmp
+      value: 
+      objectReference: {fileID: 1234499054}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1774,9 +1872,10 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 1915763202}
   - {fileID: 410087041}
-  - {fileID: 8724276312971972587}
-  - {fileID: 6097426147256299256}
   - {fileID: 2029388591}
   - {fileID: 1072681673}
   - {fileID: 2132666412}
   - {fileID: 1997467633}
+  - {fileID: 8724276312971972587}
+  - {fileID: 6097426147256299256}
+  - {fileID: 821879762}
