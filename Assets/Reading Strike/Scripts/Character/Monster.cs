@@ -26,10 +26,6 @@ namespace ReadingStrike.Character
         {
 
         }
-        private void OnDestroy()
-        {
-            SkillChgargingTaskCancel();
-        }
         void TestSkillCharging()
         {
             if (IsSkillCharged) return;
@@ -47,7 +43,7 @@ namespace ReadingStrike.Character
             else
             {
                 if (!isSkillChargingTaskStart) return;
-                SkillChgargingTaskCancel();
+                CtsCancel();
             }
         }
         int SkillUsePossibleNum()
@@ -65,8 +61,8 @@ namespace ReadingStrike.Character
         }
         void StartSkillCharhingTask()
         {
-            SkillChgargingTaskCancel();
-            cts = new CancellationTokenSource();
+            CtsCancel();
+            CtsSet();
             SkillChgargingTask().Forget();
         }
         async UniTaskVoid SkillChgargingTask()
@@ -90,16 +86,8 @@ namespace ReadingStrike.Character
         {
             if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
             {
-                BattleManager.BattleStart(hit.collider.GetComponent<Player>(), this);
+                BattleManager.instance.BattleStart(hit.collider.GetComponent<IBattleable>(), this);
             }
-        }
-        void SkillChgargingTaskCancel()
-        {
-            if (cts == null) return;
-
-            cts.Cancel();
-            cts.Dispose();
-            cts = null;
         }
         //private void OnDrawGizmos()
         //{

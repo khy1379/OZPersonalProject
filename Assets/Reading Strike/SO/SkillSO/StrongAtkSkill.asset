@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: StrongAtk
   triggerName: StrongAtk
-  power: 25
+  power: 3
   type: 1
   cooltime: 2
   stifnessTime: 3
   color: {r: 0, g: 0, b: 1, a: 0}
-  knockBackPower: 0
+  knockBackPower: 3
+  battleFrameValue: 0

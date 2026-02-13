@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: NormalAtk
   triggerName: NormalAtk
-  power: 10
+  power: 1
   type: 0
   cooltime: 0.3333333
   stifnessTime: 1
   color: {r: 1, g: 0, b: 0, a: 0}
+  knockBackPower: 1
+  battleFrameValue: 0

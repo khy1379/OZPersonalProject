@@ -94,7 +94,7 @@ namespace ReadingStrike.Skill
             IsSkillCharged = false;
             skillOrbRend.material.color = Color.white;
         }
-        async UniTaskVoid StifnessTask(CancellationTokenSource cts)
+        async UniTaskVoid StifnessTask(CancellationTokenSource cts, bool isDraw)
         {
             try
             {
@@ -120,9 +120,9 @@ namespace ReadingStrike.Skill
                 IsStifness = false;
             }
         }
-        public void StartStifnessTask()
+        public void StartStifnessTask(bool isDraw = false)
         {
-            StifnessTask(cts).Forget();
+            StifnessTask(cts, isDraw).Forget();
         }
         async UniTaskVoid CooltimeTask(CancellationTokenSource cts)
         {

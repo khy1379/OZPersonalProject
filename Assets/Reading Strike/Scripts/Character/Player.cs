@@ -27,7 +27,7 @@ namespace ReadingStrike.Character
             if (!IsSkillCharged) return;
             if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
             {
-                BattleManager.BattleStart(this, hit.collider.GetComponent<Monster>());
+                BattleManager.instance.BattleStart(this, hit.collider.GetComponent<IBattleable>());
             }
         }
         void InputKey()
@@ -83,7 +83,7 @@ namespace ReadingStrike.Character
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     anim.SetBool("InBattle", true);
-                    if (isDeath)
+                    if (IsDeath)
                     {
                         Hp = stat.maxHp;
                     }

@@ -168,19 +168,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c319e36f8e3054793545ac29e7bc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
-  maxHp: 100
+  stat: {fileID: 11400000, guid: 1f592dc9afff795419dd814d12fb25a2, type: 2}
   hp: 100
-  atk: 10
-  tmp: {fileID: 0}
-  anim: {fileID: 1868044806349162759}
-  sc: {fileID: 238394878605303779}
-  rb: {fileID: 7223544703090677931}
   targetLm:
     serializedVersion: 2
     m_Bits: 128
+  anim: {fileID: 1868044806349162759}
+  sc: {fileID: 238394878605303779}
+  rb: {fileID: 7223544703090677931}
+  tmp: {fileID: 0}
   mouseMovePos: {x: 0, y: 0, z: 0}
-  mouseMoveDis: 0
 --- !u!114 &238394878605303779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,14 +191,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillSetList:
-  - skillSo: {fileID: 11400000, guid: 4bee890a1ea3e0a4888796c124cfc8cd, type: 2}
-    settingNum: 0
+  - settingNum: 0
+    skillSo: {fileID: 11400000, guid: 4bee890a1ea3e0a4888796c124cfc8cd, type: 2}
     isCooltime: 0
-  - skillSo: {fileID: 11400000, guid: 8844b8d05afe232448afa612d0ec59d3, type: 2}
-    settingNum: 1
+  - settingNum: 1
+    skillSo: {fileID: 11400000, guid: 8844b8d05afe232448afa612d0ec59d3, type: 2}
     isCooltime: 0
-  - skillSo: {fileID: 11400000, guid: 544f1a2d70fbf4e4382beda1228b8244, type: 2}
-    settingNum: 2
+  - settingNum: 2
+    skillSo: {fileID: 11400000, guid: 544f1a2d70fbf4e4382beda1228b8244, type: 2}
     isCooltime: 0
   skillOrbRend: {fileID: 1577370479998772529}
   searchedDistance: 1

@@ -10,6 +10,8 @@ namespace ReadingStrike.Character
 {
     public abstract class Character : MonoBehaviour, IBattleable
     {
+        #region Variable & Property
+
         #region Status
         [SerializeField] protected StatusSO stat;
         [SerializeField] protected int hp;
@@ -24,18 +26,15 @@ namespace ReadingStrike.Character
                 tmp.text = $"{hp}";
             }
         }
-        public int Atk { get { return stat.atk; } }
         #endregion
 
-        #region Cur State
-        protected bool isDeath;
-
-        #endregion
-
-        #region Skill Controller
+        #region IBattleable Property
         public SkillSet ChargedSkill { get { return sc.CurSkill; } }
         public bool CurSkillUse { get { return sc.SkillUse(); } }
         public bool IsSkillCharged { get { return sc.IsSkillCharged; } }
+        public int CurSkillUseDamage { get { return (int)(stat.atk * sc.CurSkill.skillSo.power); } }
+        public bool IsDeath { get; protected set; }
+        public bool CheckBattleTiming { get; }
         #endregion
 
         #region Other
@@ -50,10 +49,12 @@ namespace ReadingStrike.Character
         public TextMeshProUGUI tmp;
         #endregion
 
+        #endregion
+
+        #region Function
 
         private void Start()
         {
-            EventSubscribe();
             StartSetting();
         }
         private void Update()
@@ -64,35 +65,23 @@ namespace ReadingStrike.Character
         {
             FixedUpdateFeat();
         }
+        private void OnDestroy()
+        {
+            CtsCancel();
+        }
         protected abstract void UpdateFeat();
         protected abstract void FixedUpdateFeat();
-        protected virtual void EventSubscribe()
-        {
-            BattleManager.RequestBattleResult += BattleResult;
-        }
         protected virtual void StartSetting()
         {
             hp = stat.maxHp;
         }
-        protected virtual void BattleResult(BattleResultType resultType)
-        {
-            switch (resultType)
-            {
-                case BattleResultType.PlayerWin:
-                    break;
-                case BattleResultType.MonsterWin:
-                    break;
-                case BattleResultType.Draw:
-                    break;
-            }
-        }
         public virtual void GetDamaged(int damage)
         {
-            if (sc.IsStifness || isDeath) return;
+            if (sc.IsStifness || IsDeath) return;
             Hp -= damage;
             if (Hp == 0)
             {
-                isDeath = true;
+                IsDeath = true;
                 anim.SetTrigger("Death");
                 sc.OrbSetFalse();
             }
@@ -102,6 +91,47 @@ namespace ReadingStrike.Character
                 anim.SetTrigger("Damaged");
             }
         }
+
+        #region Animation
+        public void StartAnimation(AnimationTriggerType type)
+        {
+            anim.SetTrigger(type.ToString());
+        }
+        public void StartCurSkillAnimation()
+        {
+            switch (ChargedSkill.skillSo.type)
+            {
+                case SkillType.NormalAtk:
+                    StartAnimation(AnimationTriggerType.NormalAtk);
+                    break;
+                case SkillType.StrongAtk:
+                    StartAnimation(AnimationTriggerType.StrongAtk);
+                    break;
+                case SkillType.Defense:
+                    StartAnimation(AnimationTriggerType.Defense);
+                    break;
+            }
+        }
+        #endregion
+
+        #region Battle
         public virtual void Stifness() { sc.StartStifnessTask(); }
+        #endregion
+
+        #region CancellationToken
+        protected void CtsSet()
+        {
+            if (cts != null) return;
+            cts = new CancellationTokenSource();
+        }
+        protected void CtsCancel()
+        {
+            if (cts == null) return;
+            cts.Cancel();
+            cts.Dispose();
+            cts = null;
+        }
+        #endregion
+        #endregion
     }
 }

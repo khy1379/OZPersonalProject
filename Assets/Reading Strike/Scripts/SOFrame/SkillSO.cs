@@ -7,11 +7,12 @@ namespace ReadingStrike.SOFrame
     {
         public string skillName;
         public string triggerName;
-        public int power;
+        public float power;
         public SkillType type;
         public float cooltime;
         public float stifnessTime;
         public Color color;
         public float knockBackPower;
+        public float battleFrameValue;
     }
 }
