@@ -526,6 +526,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Goblin_Boss
       objectReference: {fileID: 0}
+    - target: {fileID: 4059089237314317328, guid: a1a26234bcf12d946bd94b88b75eb80e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5552755857552505245, guid: a1a26234bcf12d946bd94b88b75eb80e,
         type: 3}
       propertyPath: m_LocalPosition.x

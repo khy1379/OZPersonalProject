@@ -1,48 +1,22 @@
 ﻿using ReadingStrike.Manager;
-using ReadingStrike.Skill;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using TMPro;
 using UnityEngine;
-namespace ReadingStrike.Player
+namespace ReadingStrike.Character
 {
-    public class Player : MonoBehaviour
+    public class Player : Character
     {
-        [SerializeField] private SkillController sc;
-        [SerializeField] private Rigidbody rb;
-        [SerializeField] LayerMask monLm = 1 << 7;
-        public SkillSet ChargedSkill { get { return sc.CurSkill; } }
-        public bool IsSkillCharged { get { return sc.IsSkillCharged; } }
-        //[SerializeField] private Animator anim;
         private float y, z;
-        public float speed = 10;
-        [SerializeField] private int maxHp = 100;
-        [SerializeField] private int hp = 100;
-        bool isDeath;
-        public int Hp
-        {
-            get { return hp; }
-            set
-            {
-                hp = value;
-                if (hp < 0) hp = 0;
-                else if (maxHp < hp) hp = maxHp;
-                tmp.text = $"{hp}";
-            }
-        }
-        [SerializeField] private int atk = 10;
-        public int Atk { get { return atk; } }
         private bool isMouseMove = false;
         [SerializeField] Vector3 mouseMovePos = Vector3.zero;
-        public float mouseMoveDis = 0;
-        public TextMeshProUGUI tmp;
-        [SerializeField] private Animator anim;
-        void Update()
+        protected override void StartSetting()
+        {
+
+        }
+        protected override void UpdateFeat()
         {
             InputKey();
         }
-        private void FixedUpdate()
+
+        protected override void FixedUpdateFeat()
         {
             InputKeyMove();
             //InputPointMove();
@@ -51,9 +25,9 @@ namespace ReadingStrike.Player
         void SkillUseSearching()
         {
             if (!IsSkillCharged) return;
-            if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, monLm))
+            if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
             {
-                BattleManager.BattleStart(this, hit.collider.GetComponent<Monster.Monster>(), 1);
+                BattleManager.instance.BattleStart(this, hit.collider.GetComponent<IBattleable>());
             }
         }
         void InputKey()
@@ -101,7 +75,7 @@ namespace ReadingStrike.Player
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
-                    PlHit(10);
+                    GetDamaged(10);
                 }
             }
             else
@@ -109,19 +83,19 @@ namespace ReadingStrike.Player
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     anim.SetBool("InBattle", true);
-                    if (isDeath)
+                    if (IsDeath)
                     {
-                        Hp = maxHp;
+                        Hp = stat.maxHp;
                     }
                 }
             }
         }
         void InputKeyMove()
         {
-            Vector3 moveVector = rb.transform.forward * z * Time.deltaTime * speed;
+            Vector3 moveVector = rb.transform.forward * z * Time.deltaTime * stat.moveSpeed;
             rb.MovePosition(rb.transform.position + moveVector);
             //anim.SetBool("IsPlWalk", moveVector != Vector3.zero);
-            y = y * Time.deltaTime * speed * 3;
+            y = y * Time.deltaTime * stat.moveSpeed * 3;
             rb.MoveRotation(Quaternion.Euler(rb.rotation.eulerAngles + Vector3.up * y));
         }
         void InputPoint()
@@ -138,38 +112,14 @@ namespace ReadingStrike.Player
         void InputPointMove()
         {
             if (!isMouseMove) return;
-            Vector3 movePos = Vector3.MoveTowards(rb.position, mouseMovePos, Time.deltaTime * speed);
+            Vector3 movePos = Vector3.MoveTowards(rb.position, mouseMovePos, Time.deltaTime * stat.moveSpeed);
             rb.MovePosition(movePos);
-            rb.MoveRotation(Quaternion.LookRotation(Vector3.Slerp(mouseMovePos, rb.position, speed)));
+            rb.MoveRotation(Quaternion.LookRotation(Vector3.Slerp(mouseMovePos, rb.position, stat.moveSpeed)));
             if (rb.position - mouseMovePos == Vector3.zero)
             {
                 isMouseMove = false;
                 //anim.SetBool("IsPlWalk", false);
             }
-        }
-        public void PlHit(int damage)
-        {
-            if (sc.IsStifness || isDeath) return;
-            Hp -= damage;
-            if (Hp == 0)
-            {
-                isDeath = true;
-                anim.SetTrigger("Death");
-                sc.OrbSetFalse();
-            }
-            else if (0 < Hp)
-            {
-                Stifness();
-                anim.SetTrigger("Damaged");
-            }
-        }
-        public void Stifness()
-        {
-            sc.StartStifnessTask();
-        }
-        public bool CurSkillUse()
-        {
-            return sc.SkillUse();
         }
         private void OnDrawGizmos()
         {
