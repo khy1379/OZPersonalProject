@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
-using ReadingStrike.Manager;
+using ReadingStrike.SOFrame;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -12,12 +11,8 @@ namespace ReadingStrike.Skill
     public class SkillSet
     {
         public int settingNum;
-        public string name;
-        public SkillType type;
+        public SkillSO skillSo;
         public bool isCooltime;
-        public float cooltime;
-        public float stifnessTime;
-        public Color color;
     }
     public class SkillController : MonoBehaviour
     {
@@ -54,7 +49,7 @@ namespace ReadingStrike.Skill
             }
             else if (IsSkillCharged && CurSkill.settingNum == index)
             {
-                Debug.LogWarning($"{CurSkill.name} 이미 차징됨");
+                Debug.LogWarning($"{CurSkill.skillSo.name} 이미 차징됨");
                 return;
             }
             else if (IsStifness)
@@ -64,11 +59,11 @@ namespace ReadingStrike.Skill
             }
             else if (skillSetList[index].isCooltime)
             {
-                Debug.LogWarning($"{CurSkill.name} 쿨타임");
+                Debug.LogWarning($"{CurSkill.skillSo.name} 쿨타임");
                 return;
             }
             CurSkill = skillSetList[index];
-            skillOrbRend.material.color = skillSetList[index].color;
+            skillOrbRend.material.color = skillSetList[index].skillSo.color;
             IsSkillCharged = true;
             Debug.Log($"{index}번 스킬 차징");
         }
@@ -91,7 +86,7 @@ namespace ReadingStrike.Skill
             }
             SkillReset();
             StartCooltimeTask();
-            Debug.Log($"{CurSkill.name} 스킬 사용");
+            Debug.Log($"{CurSkill.skillSo.name} 스킬 사용");
             return true;
         }
         void SkillReset()
@@ -110,7 +105,7 @@ namespace ReadingStrike.Skill
                 SkillReset();
                 IsStifness = true;
                 skillOrbRend.material.color = Color.gray;
-                float awaitTime = IsSkillCharged ? CurSkill.stifnessTime : SkillSetList[0].stifnessTime;
+                float awaitTime = IsSkillCharged ? CurSkill.skillSo.stifnessTime : SkillSetList[0].skillSo.stifnessTime;
                 await UniTask.Delay((int)(awaitTime * 1000), cancellationToken: cts.Token);
             }
             catch
@@ -139,7 +134,7 @@ namespace ReadingStrike.Skill
                     cts = new CancellationTokenSource();
                 }
                 temp.isCooltime = true;
-                await UniTask.Delay((int)(temp.cooltime * 1000), cancellationToken : cts.Token);
+                await UniTask.Delay((int)(temp.skillSo.cooltime * 1000), cancellationToken : cts.Token);
             }
             catch
             {

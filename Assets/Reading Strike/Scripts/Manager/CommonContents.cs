@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ReadingStrike.Skill;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +23,14 @@ namespace ReadingStrike.Manager
         MonsterWin,
         Draw
     }
-    public class CommonContents 
+    public interface IBattleable
+    {
+        public SkillSet ChargedSkill { get; }
+        public bool CurSkillUse { get; }
+        public bool IsSkillCharged { get; }
+        public void GetDamaged(int damage);
+    }
+    public class CommonContents
     {
 
     }

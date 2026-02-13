@@ -2,20 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ReadingStrike.Character;
 namespace ReadingStrike.Manager
 {
     public static class BattleManager
     {
         public static event Action<BattleResultType> RequestBattleResult;
-        public static void RaiseBattleResult(BattleResultType battleResult)
-        {
-            RequestBattleResult?.Invoke(battleResult);
-        }
-        public static void BattleStart(Player.Player pl, Monster.Monster mon, float stifnessTime)
+        public static void RaiseBattleResult(BattleResultType battleResult) { RequestBattleResult?.Invoke(battleResult); }
+        public static void BattleStart(Player pl, Monster mon)
         {
             if (pl.IsSkillCharged && mon.IsSkillCharged)
             {
-                switch (BattleResult(pl.ChargedSkill.type, mon.ChargedSkill.type))
+                switch (BattleResult(pl.ChargedSkill.skillSo.type, mon.ChargedSkill.skillSo.type))
                 {
                     case BattleResultType.Draw:
                         pl.Stifness();
@@ -23,16 +21,16 @@ namespace ReadingStrike.Manager
                         RaiseBattleResult(BattleResultType.Draw);
                         break;
                     case BattleResultType.PlayerWin:
-                        if(pl.CurSkillUse())
+                        if(pl.CurSkillUse)
                         {
-                            mon.MonHit(pl.Atk);
+                            mon.GetDamaged(pl.Atk);
                             RaiseBattleResult(BattleResultType.PlayerWin);
                         }
                         break;
                     case BattleResultType.MonsterWin:
-                        if(mon.CurSkillUse())
+                        if(mon.CurSkillUse)
                         {
-                            pl.PlHit(mon.Atk);
+                            pl.GetDamaged(mon.Atk);
                             RaiseBattleResult(BattleResultType.MonsterWin);
                         }
                         break;
@@ -40,21 +38,20 @@ namespace ReadingStrike.Manager
             }
             else if(pl.IsSkillCharged && !mon.IsSkillCharged)
             {
-                if (pl.CurSkillUse())
+                if (pl.CurSkillUse)
                 {
-                    mon.MonHit(pl.Atk);
+                    mon.GetDamaged(pl.Atk);
                     RaiseBattleResult(BattleResultType.PlayerWin);
                 }
             }
             else if(!pl.IsSkillCharged && mon.IsSkillCharged)
             {
-                if (mon.CurSkillUse())
+                if (mon.CurSkillUse)
                 {
-                    pl.PlHit(mon.Atk);
+                    pl.GetDamaged(mon.Atk);
                     RaiseBattleResult(BattleResultType.MonsterWin);
                 }
             }
-            Debug.Log("전투 종료");
         }
         static BattleResultType BattleResult(SkillType plSkillType, SkillType monSkillType)
         {

@@ -1,53 +1,30 @@
 ﻿using Cysharp.Threading.Tasks;
 using ReadingStrike.Manager;
-using ReadingStrike.Skill;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
-using TMPro;
 using UnityEngine;
-namespace ReadingStrike.Monster
+namespace ReadingStrike.Character
 {
-    public class Monster : MonoBehaviour
+    public class Monster : Character
     {
-        [SerializeField] private Rigidbody rb;
-        [SerializeField] private LayerMask plLm = 1 << 6;
-        [SerializeField] private SkillController sc;
         private int[] usePossibleSkillArr;
-        public SkillSet ChargedSkill { get { return sc.CurSkill; } }
-        public bool IsSkillCharged { get { return sc.IsSkillCharged; } }
         [SerializeField] private Collider[] searchedPl = new Collider[1];
         [SerializeField] private bool isPlSearched = false;
         [SerializeField] private bool isSkillChargingTaskStart = false;
-        CancellationTokenSource cts;
-        #region 상속 대상
         [SerializeField] protected float searchRadius = 5f;
-        [SerializeField] private int hp = 100;
-        public int Hp
-        {
-            get { return hp; }
-            set
-            {
-                hp = value;
-                if (hp <= 0) hp = 0;
-                tmp.text = $"{hp}";
-                if (hp == 0) Destroy(gameObject);
-            }
-        }
-        [SerializeField] private int atk = 10;
-        public TextMeshProUGUI tmp;
-        public int Atk { get { return atk; } }
 
-        #endregion
-        private void Start()
+        protected override void StartSetting()
         {
             usePossibleSkillArr = new int[sc.SkillCount];
         }
-        void Update()
+
+        protected override void UpdateFeat()
         {
-            //PlayerSearching();
-            //SkillUseSearching();
             TestSkillCharging();
+        }
+
+        protected override void FixedUpdateFeat()
+        {
+
         }
         private void OnDestroy()
         {
@@ -61,7 +38,7 @@ namespace ReadingStrike.Monster
         void PlayerSearching()
         {
             if (sc.IsStifness) return;
-            isPlSearched = 0 < Physics.OverlapSphereNonAlloc(transform.position, searchRadius, searchedPl, plLm);
+            isPlSearched = 0 < Physics.OverlapSphereNonAlloc(transform.position, searchRadius, searchedPl, targetLm);
             if (isPlSearched)
             {
                 if (isSkillChargingTaskStart) return;
@@ -111,9 +88,9 @@ namespace ReadingStrike.Monster
         }
         void SkillUseSearching()
         {
-            if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, plLm))
+            if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
             {
-                BattleManager.BattleStart(hit.collider.GetComponent<Player.Player>(), this, 1);
+                BattleManager.BattleStart(hit.collider.GetComponent<Player>(), this);
             }
         }
         void SkillChgargingTaskCancel()
@@ -123,24 +100,6 @@ namespace ReadingStrike.Monster
             cts.Cancel();
             cts.Dispose();
             cts = null;
-        }
-        public void MonHit(int damage)
-        {
-            Hp -= damage;
-            Stifness();
-            if (Hp < 0)
-            {
-                Destroy(gameObject);
-            }
-        }
-        public void Stifness()
-        {
-            sc.StartStifnessTask();
-            SkillChgargingTaskCancel();
-        }
-        public bool CurSkillUse()
-        {
-            return sc.SkillUse();
         }
         //private void OnDrawGizmos()
         //{
