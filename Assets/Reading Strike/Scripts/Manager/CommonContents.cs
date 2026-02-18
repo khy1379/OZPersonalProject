@@ -1,7 +1,4 @@
 ﻿using ReadingStrike.Skill;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace ReadingStrike.Manager
 {
@@ -30,7 +27,8 @@ namespace ReadingStrike.Manager
         StrongAtk,
         Defense,
         Damaged,
-        Death
+        Death,
+        Idle
     }
     public interface ISkillUser
     {
@@ -50,6 +48,7 @@ namespace ReadingStrike.Manager
         public void StartAnimation(AnimationTriggerType type);
         public void StartCurSkillAnimation();
         public bool CheckBattleTiming { get; }
+        public bool IsGetDamaged { get; }
     }
     public interface IBattleable : ISkillUser, IDamageable, IAnimatorable
     {

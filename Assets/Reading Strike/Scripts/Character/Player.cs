@@ -27,7 +27,14 @@ namespace ReadingStrike.Character
             if (!IsSkillCharged) return;
             if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
             {
-                BattleManager.instance.BattleStart(this, hit.collider.GetComponent<IBattleable>());
+                if (hit.rigidbody.GetComponent<IBattleable>() is IBattleable temp)
+                {
+                    BattleManager.instance.BattleStart(this, temp);
+                }
+                else
+                {
+                    Debug.Log("IBattleable 없음");
+                }
             }
         }
         void InputKey()
@@ -36,34 +43,34 @@ namespace ReadingStrike.Character
             z = Input.GetAxisRaw("Vertical");
             if (Input.GetKey(KeyCode.W))
             {
-                anim.SetFloat("Speed", 1);
+                cAnim.SetAnimFloat("Speed", 1);
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                anim.SetFloat("Speed", -1);
+                cAnim.SetAnimFloat("Speed", -1);
             }
             else
             {
-                anim.SetFloat("Speed", 0);
+                cAnim.SetAnimFloat("Speed", 0);
             }
             if (z > 0 || y > 0) isMouseMove = false;
 
-            if (anim.GetBool("InBattle"))
+            if (cAnim.GetAnimBool("InBattle"))
             {
                 if (Input.GetKeyDown(KeyCode.Z))
                 {
                     sc.SkillCharging(0);
-                    anim.SetTrigger("NormalAtk");
+                    cAnim.SetAnimTrigger("NormalAtk");
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
                     sc.SkillCharging(1);
-                    anim.SetTrigger("StrongAtk");
+                    cAnim.SetAnimTrigger("StrongAtk");
                 }
                 else if (Input.GetKeyDown(KeyCode.C))
                 {
                     sc.SkillCharging(2);
-                    anim.SetTrigger("Defense");
+                    cAnim.SetAnimTrigger("Defense");
                 }
                 else if (Input.GetKeyDown(KeyCode.Q))
                 {
@@ -71,7 +78,7 @@ namespace ReadingStrike.Character
                 }
                 else if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    anim.SetBool("InBattle", false);
+                    cAnim.SetAnimBool("InBattle", false);
                 }
                 else if (Input.GetKeyDown(KeyCode.E))
                 {
@@ -82,7 +89,7 @@ namespace ReadingStrike.Character
             {
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    anim.SetBool("InBattle", true);
+                    cAnim.SetAnimBool("InBattle", true);
                     if (IsDeath)
                     {
                         Hp = stat.maxHp;
