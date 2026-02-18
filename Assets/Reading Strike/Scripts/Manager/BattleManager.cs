@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using ReadingStrike.Character;
-using Cysharp.Threading.Tasks;
 using System.Threading;
 namespace ReadingStrike.Manager
 {
@@ -38,26 +34,33 @@ namespace ReadingStrike.Manager
             {
                 resultType = BattleResultType.MonsterWin;
             }
-
+            Debug.Log(resultType.ToString());
             switch (resultType)
             {
                 case BattleResultType.Draw:
+                    pl.StartCurSkillAnimation();
                     pl.Stifness();
+                    mon.StartCurSkillAnimation();
                     mon.Stifness();
                     RaiseBattleResult(BattleResultType.Draw);
+                    Debug.Log("무승부");
                     break;
                 case BattleResultType.PlayerWin:
                     if (pl.CurSkillUse)
                     {
+                        mon.StartCurSkillAnimation();
                         mon.GetDamaged(pl.CurSkillUseDamage);
                         RaiseBattleResult(BattleResultType.PlayerWin);
+                        Debug.Log("Player Win");
                     }
                     break;
                 case BattleResultType.MonsterWin:
                     if (mon.CurSkillUse)
                     {
+                        pl.StartCurSkillAnimation();
                         pl.GetDamaged(mon.CurSkillUseDamage);
                         RaiseBattleResult(BattleResultType.MonsterWin);
+                        Debug.Log("Monster Win");
                     }
                     break;
                 default:
@@ -65,53 +68,55 @@ namespace ReadingStrike.Manager
                     break;
             }
         }
-        //async UniTaskVoid BattleTask(IBattleable pl, IBattleable mon)
-        //{
-        //    if (pl.IsDeath || mon.IsDeath) return;
-        //    CtsSet();
-        //    pl.StartCurSkillAnimation();
-        //    mon.StartCurSkillAnimation();
-
-        //}
-        //public void StartBattleTask(IBattleable pl, IBattleable mon)
-        //{
-        //    BattleTask(pl, mon).Forget();
-        //}
         BattleResultType BattleResult(SkillType plSkillType, SkillType monSkillType)
         {
+            BattleResultType returnType = BattleResultType.None;
             switch (plSkillType)
             {
                 case SkillType.StrongAtk:
                     switch (monSkillType)
                     {
                         case SkillType.StrongAtk:
-                            return BattleResultType.Draw;
+                            returnType = BattleResultType.Draw;
+                            break;
                         case SkillType.Defense:
-                            return BattleResultType.PlayerWin;
+                            returnType = BattleResultType.PlayerWin;
+                            break;
                         default:
-                            return BattleResultType.MonsterWin;
+                            returnType = BattleResultType.MonsterWin;
+                            break;
                     }
+                    break;
                 case SkillType.Defense:
                     switch (monSkillType)
                     {
                         case SkillType.StrongAtk:
-                            return BattleResultType.MonsterWin;
+                            returnType = BattleResultType.MonsterWin;
+                            break;
                         case SkillType.Defense:
-                            return BattleResultType.None;
+                            returnType = BattleResultType.None;
+                            break;
                         default:
-                            return BattleResultType.PlayerWin;
+                            returnType = BattleResultType.PlayerWin;
+                            break;
                     }
+                    break;
                 default:
                     switch (monSkillType)
                     {
                         case SkillType.StrongAtk:
-                            return BattleResultType.PlayerWin;
+                            returnType = BattleResultType.PlayerWin;
+                            break;
                         case SkillType.Defense:
-                            return BattleResultType.MonsterWin;
+                            returnType = BattleResultType.MonsterWin;
+                            break;
                         default:
-                            return BattleResultType.Draw;
+                            returnType = BattleResultType.Draw;
+                            break;
                     }
+                    break;
             }
+            return returnType;
         }
         void CtsSet()
         {

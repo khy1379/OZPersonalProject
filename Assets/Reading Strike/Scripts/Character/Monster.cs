@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using ReadingStrike.Manager;
-using System.Threading;
 using UnityEngine;
 namespace ReadingStrike.Character
 {

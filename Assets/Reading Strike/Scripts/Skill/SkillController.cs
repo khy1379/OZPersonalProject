@@ -25,6 +25,8 @@ namespace ReadingStrike.Skill
         public bool IsStifness { get; private set; }
         public float searchedDistance = 1f;
         CancellationTokenSource cts;
+
+        bool isAnounce;
         private void Start()
         {
             SkillControllerInit();
@@ -44,24 +46,41 @@ namespace ReadingStrike.Skill
         {
             if (SkillCount <= index)
             {
-                Debug.LogWarning($"{gameObject.name} 해당 스킬은 없음");
+                if (!isAnounce)
+                {
+                    Debug.LogWarning($"{gameObject.name} 해당 스킬은 없음");
+                    isAnounce = true;
+                }
                 return;
             }
             else if (IsSkillCharged && CurSkill.settingNum == index)
             {
-                Debug.LogWarning($"{CurSkill.skillSo.name} 이미 차징됨");
+                if (!isAnounce)
+                {
+                    Debug.LogWarning($"{CurSkill.skillSo.name} 이미 차징됨");
+                    isAnounce = true;
+                }
                 return;
             }
             else if (IsStifness)
             {
-                Debug.LogWarning($"{gameObject.name} 경직 상태");
+                if (!isAnounce)
+                {
+                    Debug.LogWarning($"{gameObject.name} 경직 상태");
+                    isAnounce = true;
+                }
                 return;
             }
             else if (skillSetList[index].isCooltime)
             {
-                Debug.LogWarning($"{CurSkill.skillSo.name} 쿨타임");
+                if (!isAnounce)
+                {
+                    Debug.LogWarning($"{CurSkill.skillSo.name} 쿨타임");
+                    isAnounce = true;
+                }
                 return;
             }
+            isAnounce = false;
             CurSkill = skillSetList[index];
             skillOrbRend.material.color = skillSetList[index].skillSo.color;
             IsSkillCharged = true;
@@ -94,7 +113,7 @@ namespace ReadingStrike.Skill
             IsSkillCharged = false;
             skillOrbRend.material.color = Color.white;
         }
-        async UniTaskVoid StifnessTask(CancellationTokenSource cts, bool isDraw)
+        async UniTaskVoid StifnessTask(bool isDraw)
         {
             try
             {
@@ -122,9 +141,9 @@ namespace ReadingStrike.Skill
         }
         public void StartStifnessTask(bool isDraw = false)
         {
-            StifnessTask(cts, isDraw).Forget();
+            StifnessTask(isDraw).Forget();
         }
-        async UniTaskVoid CooltimeTask(CancellationTokenSource cts)
+        async UniTaskVoid CooltimeTask()
         {
             SkillSet temp = CurSkill;
             try
@@ -134,7 +153,7 @@ namespace ReadingStrike.Skill
                     cts = new CancellationTokenSource();
                 }
                 temp.isCooltime = true;
-                await UniTask.Delay((int)(temp.skillSo.cooltime * 1000), cancellationToken : cts.Token);
+                await UniTask.Delay((int)(temp.skillSo.cooltime * 1000), cancellationToken: cts.Token);
             }
             catch
             {
@@ -149,7 +168,7 @@ namespace ReadingStrike.Skill
         }
         void StartCooltimeTask()
         {
-            CooltimeTask(cts).Forget();
+            CooltimeTask().Forget();
         }
         public void OrbSetFalse()
         {
