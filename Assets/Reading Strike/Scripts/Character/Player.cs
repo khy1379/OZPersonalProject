@@ -4,6 +4,7 @@ namespace ReadingStrike.Character
 {
     public class Player : Character
     {
+        protected override bool CheckPlayer { get { return true; } }
         private float y, z;
         private bool isMouseMove = false;
         [SerializeField] Vector3 mouseMovePos = Vector3.zero;
@@ -13,14 +14,20 @@ namespace ReadingStrike.Character
         }
         protected override void UpdateFeat()
         {
-            InputKey();
+            if (!IsDeath)
+            {
+                InputKey();
+            }
         }
 
         protected override void FixedUpdateFeat()
         {
-            InputKeyMove();
-            //InputPointMove();
-            SkillUseSearching();
+            if (!IsDeath)
+            {
+                InputKeyMove();
+                //InputPointMove();
+                SkillUseSearching();
+            }
         }
         void SkillUseSearching()
         {
@@ -60,17 +67,14 @@ namespace ReadingStrike.Character
                 if (Input.GetKeyDown(KeyCode.Z))
                 {
                     sc.SkillCharging(0);
-                    cAnim.SetAnimTrigger("NormalAtk");
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
                     sc.SkillCharging(1);
-                    cAnim.SetAnimTrigger("StrongAtk");
                 }
                 else if (Input.GetKeyDown(KeyCode.C))
                 {
                     sc.SkillCharging(2);
-                    cAnim.SetAnimTrigger("Defense");
                 }
                 else if (Input.GetKeyDown(KeyCode.Q))
                 {

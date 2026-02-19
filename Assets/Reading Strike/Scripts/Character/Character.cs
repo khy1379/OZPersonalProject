@@ -10,7 +10,7 @@ namespace ReadingStrike.Character
     public abstract class Character : MonoBehaviour, IBattleable
     {
         #region Variable & Property
-
+        protected virtual bool CheckPlayer { get { return false; } }
         #region Status
         [SerializeField] protected StatusSO stat;
         [SerializeField] protected int hp;
@@ -29,14 +29,7 @@ namespace ReadingStrike.Character
 
         #region IBattleable Property
         public SkillSet ChargedSkill { get { return sc.CurSkill; } }
-        public bool CurSkillUse
-        {
-            get
-            {
-                StartCurSkillAnimation(); 
-                return sc.SkillUse();
-            }
-        }
+        public bool CurSkillUse { get { return sc.SkillUse(); } }
         public bool IsSkillCharged { get { return sc.IsSkillCharged; } }
         public int CurSkillUseDamage { get { return (int)(stat.atk * sc.CurSkill.skillSo.power); } }
         public bool IsDeath { get; protected set; }
@@ -62,6 +55,9 @@ namespace ReadingStrike.Character
 
         private void Start()
         {
+            hp = stat.maxHp;
+            cAnim.OwnerSet(gameObject);
+            cAnim.AddEventGetDamaged(GetDamagedAnim);
             StartSetting();
         }
         private void Update()
@@ -74,20 +70,25 @@ namespace ReadingStrike.Character
         }
         private void OnDestroy()
         {
-            CtsCancel();
+            CTSSetter.CTSCancel(ref cts);
         }
         protected abstract void UpdateFeat();
         protected abstract void FixedUpdateFeat();
-        protected virtual void StartSetting()
-        {
-            hp = stat.maxHp;
-            cAnim.AddEventGetDamaged(GetDamageAnim);
-        }
+        protected abstract void StartSetting();
         public virtual void GetDamaged(int damage)
         {
-            if (sc.IsStifness || IsDeath) return;
+            if (IsDeath) return;
             Hp -= damage;
             IsGetDamaged = true;
+            if (Hp <= 0)
+            {
+                IsDeath = true;
+                sc.OrbSetFalse();
+            }
+            else
+            {
+                Stifness();
+            }
         }
         #region Animation
         public void StartAnimation(AnimationTriggerType type)
@@ -116,17 +117,15 @@ namespace ReadingStrike.Character
                 StartAnimation(AnimationTriggerType.Idle);
             }
         }
-        public void GetDamageAnim()
+        public virtual void GetDamagedAnim()
         {
-            if (Hp == 0)
+            if (IsDeath)
             {
-                IsDeath = true;
                 StartAnimation(AnimationTriggerType.Death);
-                sc.OrbSetFalse();
+                cAnim.StartDeathAnimTask(CheckPlayer);
             }
-            else if (0 < Hp)
+            else
             {
-                Stifness();
                 StartAnimation(AnimationTriggerType.Damaged);
             }
         }
@@ -134,20 +133,19 @@ namespace ReadingStrike.Character
 
         #region Battle
         public virtual void Stifness() { sc.StartStifnessTask(); }
-        #endregion
-
-        #region CancellationToken
-        protected void CtsSet()
+        public void BattleDrawAction()
         {
-            if (cts != null) return;
-            cts = new CancellationTokenSource();
+            StartCurSkillAnimation();
+            Stifness();
         }
-        protected void CtsCancel()
+        public bool BattleWinAction(IBattleable cha)
         {
-            if (cts == null) return;
-            cts.Cancel();
-            cts.Dispose();
-            cts = null;
+            StartCurSkillAnimation();
+            if (!CurSkillUse) return false;
+
+            cha.StartCurSkillAnimation();
+            cha.GetDamaged(CurSkillUseDamage);
+            return true;
         }
         #endregion
         #endregion
