@@ -1,4 +1,6 @@
 ﻿using ReadingStrike.Skill;
+using System.Threading;
+using UnityEngine;
 
 namespace ReadingStrike.Manager
 {
@@ -52,7 +54,24 @@ namespace ReadingStrike.Manager
     }
     public interface IBattleable : ISkillUser, IDamageable, IAnimatorable
     {
+        public void BattleDrawAction();
+        public bool BattleWinAction(IBattleable cha);
 
+    }
+    public static class CTSSetter
+    {
+        public static void CTSSet(ref CancellationTokenSource cts)
+        {
+            if (cts != null) return;
+            cts = new CancellationTokenSource();
+        }
+        public static void CTSCancel(ref CancellationTokenSource cts)
+        {
+            if (cts == null) return;
+            cts.Cancel();
+            cts.Dispose();
+            cts = null;
+        }
     }
     public class CommonContents
     {

@@ -51,7 +51,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.8, y: 1.8, z: 1.8}
+  m_Size: {x: 1.8, y: 2, z: 1.8}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &4059089237314317328
 GameObject:
@@ -158,12 +158,15 @@ MonoBehaviour:
   skillSetList:
   - settingNum: 0
     skillSo: {fileID: 11400000, guid: 4bee890a1ea3e0a4888796c124cfc8cd, type: 2}
+    curCooltime: 0
     isCooltime: 0
   - settingNum: 1
     skillSo: {fileID: 11400000, guid: 8844b8d05afe232448afa612d0ec59d3, type: 2}
+    curCooltime: 0
     isCooltime: 0
   - settingNum: 2
     skillSo: {fileID: 11400000, guid: 544f1a2d70fbf4e4382beda1228b8244, type: 2}
+    curCooltime: 0
     isCooltime: 0
   skillOrbRend: {fileID: 8690710066549387201}
   searchedDistance: 1
@@ -436,6 +439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGetDamaged: 0
   anim: {fileID: 7549905169795070379}
+  owner: {fileID: 0}
 --- !u!95 &7549905169795070379 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 388476415, guid: 7df524699deb44341b3693c8538df185,

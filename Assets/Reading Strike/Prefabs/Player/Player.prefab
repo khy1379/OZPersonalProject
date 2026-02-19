@@ -191,15 +191,18 @@ MonoBehaviour:
   skillSetList:
   - settingNum: 0
     skillSo: {fileID: 11400000, guid: 4bee890a1ea3e0a4888796c124cfc8cd, type: 2}
+    curCooltime: 0
     isCooltime: 0
   - settingNum: 1
     skillSo: {fileID: 11400000, guid: 8844b8d05afe232448afa612d0ec59d3, type: 2}
+    curCooltime: 0
     isCooltime: 0
   - settingNum: 2
     skillSo: {fileID: 11400000, guid: 544f1a2d70fbf4e4382beda1228b8244, type: 2}
+    curCooltime: 0
     isCooltime: 0
   skillOrbRend: {fileID: 1577370479998772529}
-  searchedDistance: 1
+  searchedDistance: 2
 --- !u!54 &7223544703090677931
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -433,6 +436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGetDamaged: 0
   anim: {fileID: 1868044806349162759}
+  owner: {fileID: 0}
 --- !u!4 &5696081621137576829 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 24fc2c3e62c52bf4e9e63fd980b8e85d,

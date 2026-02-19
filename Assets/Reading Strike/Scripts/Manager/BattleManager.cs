@@ -34,37 +34,34 @@ namespace ReadingStrike.Manager
             {
                 resultType = BattleResultType.MonsterWin;
             }
-            Debug.Log(resultType.ToString());
             switch (resultType)
             {
                 case BattleResultType.Draw:
-                    pl.StartCurSkillAnimation();
-                    pl.Stifness();
-                    mon.StartCurSkillAnimation();
-                    mon.Stifness();
+                    //pl.StartCurSkillAnimation();
+                    //pl.Stifness();
+                    //mon.StartCurSkillAnimation();
+                    //mon.Stifness();
+                    pl.BattleDrawAction();
+                    mon.BattleDrawAction();
                     RaiseBattleResult(BattleResultType.Draw);
-                    Debug.Log("무승부");
                     break;
                 case BattleResultType.PlayerWin:
-                    if (pl.CurSkillUse)
-                    {
-                        mon.StartCurSkillAnimation();
-                        mon.GetDamaged(pl.CurSkillUseDamage);
-                        RaiseBattleResult(BattleResultType.PlayerWin);
-                        Debug.Log("Player Win");
-                    }
+                    //if (pl.CurSkillUse)
+                    //{
+                    //    mon.StartCurSkillAnimation();
+                    //    mon.GetDamaged(pl.CurSkillUseDamage);
+                    //    RaiseBattleResult(BattleResultType.PlayerWin);
+                    //}
+                    pl.BattleWinAction(mon);
                     break;
                 case BattleResultType.MonsterWin:
-                    if (mon.CurSkillUse)
-                    {
-                        pl.StartCurSkillAnimation();
-                        pl.GetDamaged(mon.CurSkillUseDamage);
-                        RaiseBattleResult(BattleResultType.MonsterWin);
-                        Debug.Log("Monster Win");
-                    }
-                    break;
-                default:
-                    Debug.Log("전투 미실행");
+                    //if (mon.CurSkillUse)
+                    //{
+                    //    pl.StartCurSkillAnimation();
+                    //    pl.GetDamaged(mon.CurSkillUseDamage);
+                    //    RaiseBattleResult(BattleResultType.MonsterWin);
+                    //}
+                    mon.BattleWinAction(pl);
                     break;
             }
         }

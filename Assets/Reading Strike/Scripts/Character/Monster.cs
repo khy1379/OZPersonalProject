@@ -28,6 +28,11 @@ namespace ReadingStrike.Character
         void TestSkillCharging()
         {
             if (IsSkillCharged) return;
+            if (IsDeath)
+            {
+                sc.SkillCancel();
+                return;
+            }
             sc.SkillCharging(0);
         }
         void PlayerSearching()
@@ -42,7 +47,7 @@ namespace ReadingStrike.Character
             else
             {
                 if (!isSkillChargingTaskStart) return;
-                CtsCancel();
+                CTSSetter.CTSCancel(ref cts);
             }
         }
         int SkillUsePossibleNum()
@@ -60,8 +65,8 @@ namespace ReadingStrike.Character
         }
         void StartSkillCharhingTask()
         {
-            CtsCancel();
-            CtsSet();
+            CTSSetter.CTSCancel(ref cts);
+            CTSSetter.CTSSet(ref cts);
             SkillChgargingTask().Forget();
         }
         async UniTaskVoid SkillChgargingTask()
