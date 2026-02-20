@@ -105,8 +105,10 @@ namespace ReadingStrike.Character
         {
             Vector3 moveVector = rb.transform.forward * z * Time.deltaTime * stat.moveSpeed;
             rb.MovePosition(rb.transform.position + moveVector);
-            //anim.SetBool("IsPlWalk", moveVector != Vector3.zero);
-            y = y * Time.deltaTime * stat.moveSpeed * 3;
+            //Vector3 moveVelocity = rb.transform.forward * z * stat.moveSpeed;
+            //moveVelocity.y = rb.velocity.y;
+            //rb.velocity = moveVelocity;
+            y = y * Time.deltaTime * stat.moveSpeed * 5;
             rb.MoveRotation(Quaternion.Euler(rb.rotation.eulerAngles + Vector3.up * y));
         }
         void InputPoint()
