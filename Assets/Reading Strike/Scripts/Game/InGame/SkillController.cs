@@ -18,16 +18,15 @@ namespace ReadingStrike.Game.InGame
     public class SkillController : MonoBehaviour
     {
         [SerializeField] List<SkillSet> skillSetList;
-        public List<SkillSet> SkillSetList { get { return skillSetList; } }
+        public List<SkillSet> SkillSetList => skillSetList;
         public SkillSet CurSkill { get; private set; }
-        [SerializeField] public int SkillCount { get { return skillSetList.Count; } }
+        [SerializeField] public int SkillCount => skillSetList.Count; 
         [SerializeField] private MeshRenderer skillOrbRend;
         public bool IsSkillCharged { get; private set; }
         public bool IsStifness { get; private set; }
         public float searchedDistance = 1f;
         CancellationTokenSource cts;
 
-        //byte isAnounceMask;
         private void Start()
         {
             SkillControllerInit();
@@ -47,63 +46,38 @@ namespace ReadingStrike.Game.InGame
         {
             if (SkillCount <= index)
             {
-                //if ((isAnounceMask & (1 << 0)) == 0)
-                //{
-                //    Debug.LogWarning($"{gameObject.name} 해당 스킬은 없음");
-                //    isAnounceMask |= 1 << 0;
-                //}
                 return;
             }
             else if (IsSkillCharged && CurSkill.settingNum == index)
             {
-                //if ((isAnounceMask & (1 << 1)) == 0)
-                //{
-                //    Debug.LogWarning($"{CurSkill.skillSo.name} 이미 차징됨");
-                //    isAnounceMask |= 1 << 1;
-                //}
                 return;
             }
             else if (IsStifness)
             {
-                //if ((isAnounceMask & (1 << 2)) == 0)
-                //{
-                //    Debug.LogWarning($"{gameObject.name} 경직 상태");
-                //    isAnounceMask |= 1 << 2;
-                //}
                 return;
             }
             else if (skillSetList[index].isCooltime)
             {
-                //if ((isAnounceMask & (1 << 3)) == 0)
-                //{
-                //    Debug.LogWarning($"{CurSkill.skillSo.name} 쿨타임");
-                //    isAnounceMask |= 1 << 3;
-                //}
                 return;
             }
-            //isAnounceMask = 0;
             CurSkill = skillSetList[index];
-            skillOrbRend.material.color = skillSetList[index].skillSo.color;
+            skillOrbRend.material.color = skillSetList[index].skillSo.Color;
             IsSkillCharged = true;
-            //Debug.Log($"{index}번 스킬 차징");
         }
 
         public void SkillCancel()
         {
             if (!IsSkillCharged) return;
             SkillReset();
-            //Debug.Log("스킬 차징 취소");
         }
         public bool SkillUse()
         {
             if (!IsSkillCharged)
             {
-                //Debug.LogWarning("스킬 차징된 상태가 아님");
                 return false;
             }
             SkillReset();
             StartCooltimeTask();
-            //Debug.Log($"{CurSkill.skillSo.name} 스킬 사용");
             return true;
         }
         void SkillReset()
@@ -120,7 +94,7 @@ namespace ReadingStrike.Game.InGame
                 SkillReset();
                 IsStifness = true;
                 skillOrbRend.material.color = Color.gray;
-                float awaitTime = IsSkillCharged ? CurSkill.skillSo.stifnessTime : SkillSetList[0].skillSo.stifnessTime;
+                float awaitTime = IsSkillCharged ? CurSkill.skillSo.StifnessTime : SkillSetList[0].skillSo.StifnessTime;
 
                 await UniTask.Delay((int)(awaitTime * 1000), cancellationToken: cts.Token);
 
@@ -144,7 +118,7 @@ namespace ReadingStrike.Game.InGame
                 CTSSetter.CTSSet(ref cts);
                 temp.isCooltime = true;
 
-                await UniTask.Delay((int)(temp.skillSo.cooltime * 1000), cancellationToken: cts.Token);
+                await UniTask.Delay((int)(temp.skillSo.Cooltime * 1000), cancellationToken: cts.Token);
 
                 temp.isCooltime = false;
             }

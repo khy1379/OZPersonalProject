@@ -85,13 +85,6 @@ namespace ReadingStrike.Game.InGame
                 isSkillChargingTaskStart = false;
             }
         }
-        void SkillUseSearching()
-        {
-            if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
-            {
-                BattleManager.instance.BattleStart(hit.collider.GetComponent<IBattleable>(), this);
-            }
-        }
         //private void OnDrawGizmos()
         //{
         //    Gizmos.color = Color.red;

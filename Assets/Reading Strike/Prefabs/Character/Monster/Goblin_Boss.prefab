@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6349213062933564214}
   - component: {fileID: 169016501778938320}
-  m_Layer: 7
-  m_Name: MonsterCollider
+  m_Layer: 9
+  m_Name: MonsterHitCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -131,12 +131,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stat: {fileID: 11400000, guid: 1f592dc9afff795419dd814d12fb25a2, type: 2}
   hp: 100
-  targetLm:
-    serializedVersion: 2
-    m_Bits: 64
   cAnim: {fileID: 3487550526080390130}
   sc: {fileID: 4865359759301782823}
   rb: {fileID: 9159645737630824783}
+  cc: {fileID: 0}
+  targetLm:
+    serializedVersion: 2
+    m_Bits: 128
   tmp: {fileID: 0}
   searchedPl:
   - {fileID: 0}

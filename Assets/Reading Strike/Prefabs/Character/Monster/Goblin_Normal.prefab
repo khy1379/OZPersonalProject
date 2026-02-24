@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6349213062933564214}
   - component: {fileID: 7565760357866934589}
-  m_Layer: 7
-  m_Name: MonsterCollider
+  m_Layer: 9
+  m_Name: MonsterHitCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -131,12 +131,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stat: {fileID: 11400000, guid: 1f592dc9afff795419dd814d12fb25a2, type: 2}
   hp: 100
-  targetLm:
-    serializedVersion: 2
-    m_Bits: 64
   cAnim: {fileID: 5693841823215487481}
   sc: {fileID: 4865359759301782823}
   rb: {fileID: 9159645737630824783}
+  cc: {fileID: 0}
+  targetLm:
+    serializedVersion: 2
+    m_Bits: 128
   tmp: {fileID: 0}
   searchedPl:
   - {fileID: 0}
@@ -158,12 +159,15 @@ MonoBehaviour:
   skillSetList:
   - settingNum: 0
     skillSo: {fileID: 11400000, guid: 4bee890a1ea3e0a4888796c124cfc8cd, type: 2}
+    curCooltime: 0
     isCooltime: 0
   - settingNum: 1
     skillSo: {fileID: 11400000, guid: 8844b8d05afe232448afa612d0ec59d3, type: 2}
+    curCooltime: 0
     isCooltime: 0
   - settingNum: 2
     skillSo: {fileID: 11400000, guid: 544f1a2d70fbf4e4382beda1228b8244, type: 2}
+    curCooltime: 0
     isCooltime: 0
   skillOrbRend: {fileID: 8690710066549387201}
   searchedDistance: 1
@@ -691,6 +695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGetDamaged: 0
   anim: {fileID: 5289170342182787632}
+  owner: {fileID: 0}
 --- !u!4 &8879663387836536570 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4058852915679833821, guid: 0619b4f784b9fca4b997798c15670c42,
