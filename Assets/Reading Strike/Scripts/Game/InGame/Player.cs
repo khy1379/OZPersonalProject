@@ -4,7 +4,7 @@ namespace ReadingStrike.Game.InGame
     public class Player : Character
     {
         protected override bool CheckPlayer { get { return true; } }
-        private float y, z;
+        private float hor, ver;
         private bool isMouseMove = false;
         [SerializeField] Vector3 mouseMovePos = Vector3.zero;
         protected override void StartSetting()
@@ -23,43 +23,24 @@ namespace ReadingStrike.Game.InGame
         {
             if (!IsDeath)
             {
-                InputKeyMove();
                 //InputPointMove();
                 SkillUseSearching();
             }
         }
-        void SkillUseSearching()
-        {
-            if (!IsSkillCharged) return;
-            if (Physics.Raycast(rb.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
-            {
-                if (hit.rigidbody.GetComponent<IBattleable>() is IBattleable temp)
-                {
-                    BattleManager.instance.BattleStart(this, temp);
-                }
-                else
-                {
-                    Debug.Log("IBattleable 없음");
-                }
-            }
-        }
         void InputKey()
         {
-            y = Input.GetAxisRaw("Horizontal");
-            z = Input.GetAxisRaw("Vertical");
-            if (Input.GetKey(KeyCode.W))
+            hor = Input.GetAxisRaw("Horizontal");
+            ver = Input.GetAxisRaw("Vertical");
+            if (hor != 0 || ver != 0)
             {
                 cAnim.SetAnimFloat("Speed", 1);
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                cAnim.SetAnimFloat("Speed", -1);
             }
             else
             {
                 cAnim.SetAnimFloat("Speed", 0);
             }
-            if (z > 0 || y > 0) isMouseMove = false;
+            if (ver > 0 || hor > 0) isMouseMove = false;
+            ccm.CCMove(hor, ver);
 
             if (cAnim.GetAnimBool("InBattle"))
             {
@@ -95,20 +76,10 @@ namespace ReadingStrike.Game.InGame
                     cAnim.SetAnimBool("InBattle", true);
                     if (IsDeath)
                     {
-                        Hp = stat.maxHp;
+                        Hp = stat.MaxHp;
                     }
                 }
             }
-        }
-        void InputKeyMove()
-        {
-            Vector3 moveVector = rb.transform.forward * z * Time.deltaTime * stat.moveSpeed;
-            rb.MovePosition(rb.transform.position + moveVector);
-            //Vector3 moveVelocity = rb.transform.forward * z * stat.moveSpeed;
-            //moveVelocity.y = rb.velocity.y;
-            //rb.velocity = moveVelocity;
-            y = y * Time.deltaTime * stat.moveSpeed * 5;
-            rb.MoveRotation(Quaternion.Euler(rb.rotation.eulerAngles + Vector3.up * y));
         }
         void InputPoint()
         {
@@ -124,9 +95,9 @@ namespace ReadingStrike.Game.InGame
         void InputPointMove()
         {
             if (!isMouseMove) return;
-            Vector3 movePos = Vector3.MoveTowards(rb.position, mouseMovePos, Time.deltaTime * stat.moveSpeed);
+            Vector3 movePos = Vector3.MoveTowards(rb.position, mouseMovePos, Time.deltaTime * stat.MoveSpeed);
             rb.MovePosition(movePos);
-            rb.MoveRotation(Quaternion.LookRotation(Vector3.Slerp(mouseMovePos, rb.position, stat.moveSpeed)));
+            rb.MoveRotation(Quaternion.LookRotation(Vector3.Slerp(mouseMovePos, rb.position, stat.MoveSpeed)));
             if (rb.position - mouseMovePos == Vector3.zero)
             {
                 isMouseMove = false;
@@ -136,7 +107,7 @@ namespace ReadingStrike.Game.InGame
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            if (IsSkillCharged) Gizmos.DrawLine(rb.position, rb.position + rb.transform.forward * sc.searchedDistance);
+            if (IsSkillCharged) Gizmos.DrawLine(transform.position, transform.position + transform.transform.forward * sc.searchedDistance);
         }
         bool CheckMovingPossible()
         {

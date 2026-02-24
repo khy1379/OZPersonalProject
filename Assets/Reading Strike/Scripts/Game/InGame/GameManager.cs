@@ -13,9 +13,16 @@ namespace ReadingStrike.Game.InGame
     public class GameManager : MonoBehaviour
     {
         public static GameManager instance;
+        public SceneType CurSceneType { get; private set; }
+        public InGameState CurInGameState { get; private set; }
+
         [SerializeField] private MySceneManager sceneMgr;
         [SerializeField] private SoundManager soundMgr;
+
+
         GameManagerEvent gameMgrEvent = new GameManagerEvent();
+
+
         private void Awake()
         {
             if (instance != null)
@@ -51,7 +58,11 @@ namespace ReadingStrike.Game.InGame
         public void AddRequestSceneChange(Action<SceneType> func) { sceneMgr.AddRequestSceneChange(func); }
         #endregion
         #region SceneChange 함수
-        public void SceneChange(SceneType type) { sceneMgr.SceneChangeStartCo(type); }
+        void SceneChange(SceneType type) 
+        { 
+            sceneMgr.SceneChangeStartCo(type);
+            CurSceneType = type;
+        }
         public void SceneChangeTitle() { sceneMgr.SceneChangeStartCo(SceneType.Title); }
         public void SceneChangeVillage() { sceneMgr.SceneChangeStartCo(SceneType.Village); }
         public void SceneChangeDungeon() { sceneMgr.SceneChangeStartCo(SceneType.Dungeon); }

@@ -3,25 +3,10 @@ using UnityEngine;
 
 namespace ReadingStrike.Game.InGame
 {
-    public enum SceneType
-    {
-        Title,
-        Village,
-        Dungeon
-    }
-    public enum SkillType
-    {
-        NormalAtk,
-        StrongAtk,
-        Defense
-    }
-    public enum BattleResultType
-    {
-        None,
-        PlayerWin,
-        MonsterWin,
-        Draw
-    }
+    public enum SceneType { Title, Village, Dungeon }
+    public enum InGameState { Playing, Pause, Death }
+    public enum SkillType { NormalAtk, StrongAtk, Defense }
+    public enum BattleResultType { None, AWin, BWin, Draw }
     public enum AnimationTriggerType
     {
         NormalAtk,

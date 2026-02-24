@@ -7,7 +7,7 @@ namespace ReadingStrike.Game.InGame
     public abstract class Character : MonoBehaviour, IBattleable
     {
         #region Variable & Property
-        protected virtual bool CheckPlayer { get { return false; } }
+        protected virtual bool CheckPlayer => false; 
         #region Status
         [SerializeField] protected StatusSO stat;
         [SerializeField] protected int hp;
@@ -18,31 +18,32 @@ namespace ReadingStrike.Game.InGame
             {
                 hp = value;
                 if (hp < 0) hp = 0;
-                else if (stat.maxHp < hp) hp = stat.maxHp;
+                else if (stat.MaxHp < hp) hp = stat.MaxHp;
                 tmp.text = $"{hp}";
             }
         }
         #endregion
 
         #region IBattleable Property
-        public SkillSet ChargedSkill { get { return sc.CurSkill; } }
-        public bool CurSkillUse { get { return sc.SkillUse(); } }
-        public bool IsSkillCharged { get { return sc.IsSkillCharged; } }
-        public int CurSkillUseDamage { get { return (int)(stat.atk * sc.CurSkill.skillSo.power); } }
+        public SkillSet ChargedSkill => sc.CurSkill; 
+        public bool CurSkillUse => sc.SkillUse(); 
+        public bool IsSkillCharged => sc.IsSkillCharged;
+        public int CurSkillUseDamage => (int)(stat.Atk * sc.CurSkill.skillSo.Power);
         public bool IsDeath { get; protected set; }
         public bool CheckBattleTiming { get; }
         public bool IsGetDamaged { get { return cAnim.isGetDamaged; } set { cAnim.isGetDamaged = value; } }
         #endregion
 
-        #region Other
-        [SerializeField] protected LayerMask targetLm;
-
+        #region GetComponent Target
         [SerializeField] protected CharacterAnimController cAnim;
         [SerializeField] protected SkillController sc;
         [SerializeField] protected Rigidbody rb;
+        [SerializeField] protected CharacterControllerMove ccm;
+        #endregion
 
+        #region Other
+        [SerializeField] protected LayerMask targetLm;
         protected CancellationTokenSource cts;
-
         public TextMeshProUGUI tmp;
         #endregion
 
@@ -52,9 +53,19 @@ namespace ReadingStrike.Game.InGame
 
         private void Start()
         {
-            hp = stat.maxHp;
-            cAnim.OwnerSet(gameObject);
-            cAnim.AddEventGetDamaged(GetDamagedAnim);
+            if (stat != null)
+            {
+                hp = stat.MaxHp;
+            }
+            if (cAnim != null)
+            {
+                cAnim.OwnerSet(gameObject);
+                cAnim.AddEventGetDamaged(GetDamagedAnim);
+            }
+            if (ccm != null)
+            {
+                ccm.InitSetting(stat.MoveSpeed);
+            }
             StartSetting();
         }
         private void Update()
@@ -96,7 +107,7 @@ namespace ReadingStrike.Game.InGame
         {
             if (IsSkillCharged)
             {
-                switch (ChargedSkill.skillSo.type)
+                switch (ChargedSkill.skillSo.Type)
                 {
                     case SkillType.NormalAtk:
                         StartAnimation(AnimationTriggerType.NormalAtk);
@@ -143,6 +154,21 @@ namespace ReadingStrike.Game.InGame
             cha.StartCurSkillAnimation();
             cha.GetDamaged(CurSkillUseDamage);
             return true;
+        }
+        protected void SkillUseSearching()
+        {
+            if (!IsSkillCharged) return;
+            if (Physics.Raycast(rb.transform.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
+            {
+                if (hit.rigidbody.TryGetComponent(out Character temp))
+                {
+                    BattleManager.instance.BattleStart(this, temp);
+                }
+                else
+                {
+                    Debug.Log("IBattleable 없음");
+                }
+            }
         }
         #endregion
         #endregion

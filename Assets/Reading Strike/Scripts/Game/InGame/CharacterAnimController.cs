@@ -17,11 +17,14 @@ namespace ReadingStrike.Game.InGame
         {
             CTSSetter.CTSCancel(ref cts);
         }
-        public void OwnerSet(GameObject owner) { this.owner = owner; }
-        public void SetAnimTrigger(string animName) { anim.SetTrigger(animName); }
-        public void SetAnimFloat(string animName, float x) { anim.SetFloat(animName, x); }
-        public bool GetAnimBool(string animName) { return anim.GetBool(animName); }
-        public void SetAnimBool(string animName, bool isValue) { anim.SetBool(animName, isValue); }
+        public void OwnerSet(GameObject owner) 
+        { 
+            this.owner = owner; 
+        }
+        public void SetAnimTrigger(string animName) => anim.SetTrigger(animName); 
+        public void SetAnimFloat(string animName, float x) => anim.SetFloat(animName, x); 
+        public bool GetAnimBool(string animName) => anim.GetBool(animName); 
+        public void SetAnimBool(string animName, bool isValue) => anim.SetBool(animName, isValue);
         public void GetDamageAnim()
         {
             if (!isGetDamaged) return;
@@ -56,7 +59,7 @@ namespace ReadingStrike.Game.InGame
         {
             DeathAnimTask(isPlayer).Forget();
         }
-        public void AddEventGetDamaged(Action func) { RaiseGetDamaged += func; }
-        public void AddEventPlayerDeath(Action func) { RaisePlayerDeath += func; }
+        public void AddEventGetDamaged(Action func) => RaiseGetDamaged += func; 
+        public void AddEventPlayerDeath(Action func) => RaisePlayerDeath += func; 
     }
 }

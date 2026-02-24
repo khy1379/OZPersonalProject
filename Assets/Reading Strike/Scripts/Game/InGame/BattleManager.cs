@@ -7,61 +7,39 @@ namespace ReadingStrike.Game.InGame
     {
         public static BattleManager instance;
         public event Action<BattleResultType> RequestBattleResult;
-
-        CancellationTokenSource cts;
         private void Awake()
         {
             if (instance != null) Destroy(gameObject);
             instance = this;
         }
-        private void OnDestroy()
-        {
-            CtsCancel();
-        }
         public void RaiseBattleResult(BattleResultType battleResult) { RequestBattleResult?.Invoke(battleResult); }
-        public void BattleStart(IBattleable pl, IBattleable mon)
+        public void BattleStart(Character AChar, Character BChar)
         {
             BattleResultType resultType = BattleResultType.None;
-            if (pl.IsSkillCharged && mon.IsSkillCharged)
+            if (AChar.IsSkillCharged && BChar.IsSkillCharged)
             {
-                resultType = BattleResult(pl.ChargedSkill.skillSo.type, mon.ChargedSkill.skillSo.type);
+                resultType = BattleResult(AChar.ChargedSkill.skillSo.Type, BChar.ChargedSkill.skillSo.Type);
             }
-            else if(pl.IsSkillCharged && !mon.IsSkillCharged)
+            else if(AChar.IsSkillCharged && !BChar.IsSkillCharged)
             {
-                resultType = BattleResultType.PlayerWin;
+                resultType = BattleResultType.AWin;
             }
-            else if(!pl.IsSkillCharged && mon.IsSkillCharged)
+            else if(!AChar.IsSkillCharged && BChar.IsSkillCharged)
             {
-                resultType = BattleResultType.MonsterWin;
+                resultType = BattleResultType.BWin;
             }
             switch (resultType)
             {
                 case BattleResultType.Draw:
-                    //pl.StartCurSkillAnimation();
-                    //pl.Stifness();
-                    //mon.StartCurSkillAnimation();
-                    //mon.Stifness();
-                    pl.BattleDrawAction();
-                    mon.BattleDrawAction();
+                    AChar.BattleDrawAction();
+                    BChar.BattleDrawAction();
                     RaiseBattleResult(BattleResultType.Draw);
                     break;
-                case BattleResultType.PlayerWin:
-                    //if (pl.CurSkillUse)
-                    //{
-                    //    mon.StartCurSkillAnimation();
-                    //    mon.GetDamaged(pl.CurSkillUseDamage);
-                    //    RaiseBattleResult(BattleResultType.PlayerWin);
-                    //}
-                    pl.BattleWinAction(mon);
+                case BattleResultType.AWin:
+                    AChar.BattleWinAction(BChar);
                     break;
-                case BattleResultType.MonsterWin:
-                    //if (mon.CurSkillUse)
-                    //{
-                    //    pl.StartCurSkillAnimation();
-                    //    pl.GetDamaged(mon.CurSkillUseDamage);
-                    //    RaiseBattleResult(BattleResultType.MonsterWin);
-                    //}
-                    mon.BattleWinAction(pl);
+                case BattleResultType.BWin:
+                    BChar.BattleWinAction(AChar);
                     break;
             }
         }
@@ -77,10 +55,10 @@ namespace ReadingStrike.Game.InGame
                             returnType = BattleResultType.Draw;
                             break;
                         case SkillType.Defense:
-                            returnType = BattleResultType.PlayerWin;
+                            returnType = BattleResultType.AWin;
                             break;
                         default:
-                            returnType = BattleResultType.MonsterWin;
+                            returnType = BattleResultType.BWin;
                             break;
                     }
                     break;
@@ -88,13 +66,13 @@ namespace ReadingStrike.Game.InGame
                     switch (monSkillType)
                     {
                         case SkillType.StrongAtk:
-                            returnType = BattleResultType.MonsterWin;
+                            returnType = BattleResultType.BWin;
                             break;
                         case SkillType.Defense:
                             returnType = BattleResultType.None;
                             break;
                         default:
-                            returnType = BattleResultType.PlayerWin;
+                            returnType = BattleResultType.AWin;
                             break;
                     }
                     break;
@@ -102,10 +80,10 @@ namespace ReadingStrike.Game.InGame
                     switch (monSkillType)
                     {
                         case SkillType.StrongAtk:
-                            returnType = BattleResultType.PlayerWin;
+                            returnType = BattleResultType.AWin;
                             break;
                         case SkillType.Defense:
-                            returnType = BattleResultType.MonsterWin;
+                            returnType = BattleResultType.BWin;
                             break;
                         default:
                             returnType = BattleResultType.Draw;
@@ -114,18 +92,6 @@ namespace ReadingStrike.Game.InGame
                     break;
             }
             return returnType;
-        }
-        void CtsSet()
-        {
-            if (cts != null) return;
-            cts = new CancellationTokenSource();
-        }
-        void CtsCancel()
-        {
-            if (cts == null) return;
-            cts.Cancel();
-            cts.Dispose();
-            cts = null;
         }
     }
 }
