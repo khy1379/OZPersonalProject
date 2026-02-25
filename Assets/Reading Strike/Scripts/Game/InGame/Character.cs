@@ -4,12 +4,13 @@ using TMPro;
 using UnityEngine;
 namespace ReadingStrike.Game.InGame
 {
-    public abstract class Character : MonoBehaviour, IBattleable
+    public abstract class Character : MonoBehaviour
     {
         #region Variable & Property
         protected virtual bool CheckPlayer => false; 
-        #region Status
-        [SerializeField] protected StatusSO stat;
+        #region Stat
+        [SerializeField] protected StatSO statSO;
+        protected StatData stat;
         [SerializeField] protected int hp;
         public int Hp
         {
@@ -18,7 +19,7 @@ namespace ReadingStrike.Game.InGame
             {
                 hp = value;
                 if (hp < 0) hp = 0;
-                else if (stat.MaxHp < hp) hp = stat.MaxHp;
+                else if (stat.maxHp < hp) hp = stat.maxHp;
                 tmp.text = $"{hp}";
             }
         }
@@ -28,7 +29,7 @@ namespace ReadingStrike.Game.InGame
         public SkillSet ChargedSkill => sc.CurSkill; 
         public bool CurSkillUse => sc.SkillUse(); 
         public bool IsSkillCharged => sc.IsSkillCharged;
-        public int CurSkillUseDamage => (int)(stat.Atk * sc.CurSkill.skillSo.Power);
+        public int CurSkillUseDamage => (int)(stat.atk * sc.CurSkill.data.power);
         public bool IsDeath { get; protected set; }
         public bool CheckBattleTiming { get; }
         public bool IsGetDamaged { get { return cAnim.isGetDamaged; } set { cAnim.isGetDamaged = value; } }
@@ -53,9 +54,10 @@ namespace ReadingStrike.Game.InGame
 
         private void Start()
         {
-            if (stat != null)
+            if (statSO != null)
             {
-                hp = stat.MaxHp;
+                stat = statSO.Data;
+                hp = stat.maxHp;
             }
             if (cAnim != null)
             {
@@ -64,7 +66,7 @@ namespace ReadingStrike.Game.InGame
             }
             if (ccm != null)
             {
-                ccm.InitSetting(stat.MoveSpeed);
+                ccm.InitSetting(stat.moveSpeed);
             }
             StartSetting();
         }
@@ -107,7 +109,7 @@ namespace ReadingStrike.Game.InGame
         {
             if (IsSkillCharged)
             {
-                switch (ChargedSkill.skillSo.Type)
+                switch (ChargedSkill.data.type)
                 {
                     case SkillType.NormalAtk:
                         StartAnimation(AnimationTriggerType.NormalAtk);
@@ -146,7 +148,7 @@ namespace ReadingStrike.Game.InGame
             StartCurSkillAnimation();
             Stifness();
         }
-        public bool BattleWinAction(IBattleable cha)
+        public bool BattleWinAction(Character cha)
         {
             StartCurSkillAnimation();
             if (!CurSkillUse) return false;

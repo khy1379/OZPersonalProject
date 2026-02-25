@@ -2,35 +2,42 @@
 using UnityEngine;
 namespace ReadingStrike.Game.GameData
 {
+    [System.Serializable]
+    public struct SkillData
+    {
+        public string skillName;
+        public float power;
+        public SkillType type;
+        public float cooltime;
+        public float stifnessTime;
+        public Color color;
+        public float knockBackPower;
+        public float battleFrameValue;
+    }
     [CreateAssetMenu(fileName = "Skill", menuName = "SO/SkillSO")]
     public class SkillSO : ScriptableObject
     {
-        string skillName;
-        public string SkillName { get { return skillName; } }
+        [SerializeField] SkillData data;
+        public ref readonly SkillData Data => ref data;
 
-        string triggerName;
-        public string TriggerName { get { return triggerName; } }
 
-        float power;
-        public float Power { get { return power; } }
+        /*
+        [SerializeField] string skillName;
+        [SerializeField] float power;
+        [SerializeField] SkillType type;
+        [SerializeField] float cooltime;
+        [SerializeField] float stifnessTime;
+        [SerializeField] Color color;
+        [SerializeField] float knockBackPower;
+        [SerializeField] float battleFrameValue;
 
-        SkillType type;
-        public SkillType Type { get { return type; } }
-
-        float cooltime;
-        public float Cooltime { get { return cooltime; } }
-
-        float stifnessTime;
-        public float StifnessTime { get { return stifnessTime; } }
-
-        Color color;
-        public Color Color { get { return color; } }
-
-        float knockBackPower;
-        public float KnockBackPower { get { return knockBackPower; } }
-
-        float battleFrameValue;
-        public float BattleFrameValue { get { return battleFrameValue; } }
-
+        public string SkillName => skillName;
+        public float Power => power;
+        public SkillType Type => type;
+        public float Cooltime => cooltime;
+        public float StifnessTime=>stifnessTime;
+        public Color Color=>color;
+        public float KnockBackPower=>knockBackPower;
+        public float BattleFrameValue=>battleFrameValue;*/
     }
 }

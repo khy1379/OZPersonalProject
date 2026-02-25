@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
+using ReadingStrike.Game.GameData;
 namespace ReadingStrike.Game.InGame
 {
     public class Monster : Character

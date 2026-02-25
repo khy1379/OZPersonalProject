@@ -1,11 +1,8 @@
-﻿using Cysharp.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ReadingStrike.Game.InGame
 {
-    public class TitleUI : UIManager
+    public class TitleUI : UIPanelBase
     {
         [SerializeField] GameObject startTxt;
         protected override void StartFeat()

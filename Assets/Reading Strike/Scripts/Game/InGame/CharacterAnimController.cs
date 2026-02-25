@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using ReadingStrike.Game.GameData;
 namespace ReadingStrike.Game.InGame
 {
     public class CharacterAnimController : MonoBehaviour

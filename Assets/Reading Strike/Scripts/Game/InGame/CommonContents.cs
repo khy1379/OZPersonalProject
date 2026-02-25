@@ -1,7 +1,10 @@
-﻿using System.Threading;
+﻿using ReadingStrike.Game.InGame;
+using System;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace ReadingStrike.Game.InGame
+namespace ReadingStrike.Game.GameData
 {
     public enum SceneType { Title, Village, Dungeon }
     public enum InGameState { Playing, Pause, Death }
@@ -16,32 +19,33 @@ namespace ReadingStrike.Game.InGame
         Death,
         Idle
     }
-    public interface ISkillUser
-    {
-        public SkillSet ChargedSkill { get; }
-        public bool CurSkillUse { get; }
-        public bool IsSkillCharged { get; }
-        public int CurSkillUseDamage { get; }
-    }
-    public interface IDamageable
-    {
-        public bool IsDeath { get; }
-        public void GetDamaged(int damage);
-        public void Stifness();
-    }
-    public interface IAnimatorable
-    {
-        public void StartAnimation(AnimationTriggerType type);
-        public void StartCurSkillAnimation();
-        public bool CheckBattleTiming { get; }
-        public bool IsGetDamaged { get; }
-    }
-    public interface IBattleable : ISkillUser, IDamageable, IAnimatorable
-    {
-        public void BattleDrawAction();
-        public bool BattleWinAction(IBattleable cha);
+    public enum DungeonType { Plane, }
+    //public interface ISkillUser
+    //{
+    //    public SkillSet ChargedSkill { get; }
+    //    public bool CurSkillUse { get; }
+    //    public bool IsSkillCharged { get; }
+    //    public int CurSkillUseDamage { get; }
+    //}
+    //public interface IDamageable
+    //{
+    //    public bool IsDeath { get; }
+    //    public void GetDamaged(int damage);
+    //    public void Stifness();
+    //}
+    //public interface IAnimatorable
+    //{
+    //    public void StartAnimation(AnimationTriggerType type);
+    //    public void StartCurSkillAnimation();
+    //    public bool CheckBattleTiming { get; }
+    //    public bool IsGetDamaged { get; }
+    //}
+    //public interface IBattleable : ISkillUser, IDamageable, IAnimatorable
+    //{
+    //    public void BattleDrawAction();
+    //    public bool BattleWinAction(IBattleable cha);
 
-    }
+    //}
     public static class CTSSetter
     {
         public static void CTSSet(ref CancellationTokenSource cts)

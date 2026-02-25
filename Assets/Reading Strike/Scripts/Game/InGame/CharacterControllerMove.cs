@@ -1,22 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class CharacterControllerMove : MonoBehaviour
+namespace ReadingStrike.Game.InGame
 {
-    [SerializeField] CharacterController cc;
-    [SerializeField] float speed;
-    public void InitSetting(float speed)
+    public class CharacterControllerMove : MonoBehaviour
     {
-        this.speed = speed;
-    }
-    public void CCMove(float h, float v)
-    {
-        Vector3 dir = new Vector3(h, 0, v) * speed;
-        if(dir != Vector3.zero)
+        [SerializeField] CharacterController cc;
+        [SerializeField] float speed;
+        public void InitSetting(float speed)
         {
-            transform.rotation = Quaternion.Euler(0, Mathf.Atan2(h, v) * Mathf.Rad2Deg, 0);
+            this.speed = speed;
         }
-        cc.Move(dir * Time.deltaTime);
+        public void CCMove(float h, float v)
+        {
+            Vector3 dir = new Vector3(h, 0, v) * speed;
+            if (dir != Vector3.zero)
+            {
+                transform.rotation = Quaternion.Euler(0, Mathf.Atan2(h, v) * Mathf.Rad2Deg, 0);
+            }
+            cc.Move(dir * Time.deltaTime);
+        }
     }
 }

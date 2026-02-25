@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using ReadingStrike.Game.GameData;
 
 namespace ReadingStrike.Game.InGame
 {
