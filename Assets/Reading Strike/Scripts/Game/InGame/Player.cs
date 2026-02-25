@@ -76,7 +76,7 @@ namespace ReadingStrike.Game.InGame
                     cAnim.SetAnimBool("InBattle", true);
                     if (IsDeath)
                     {
-                        Hp = stat.MaxHp;
+                        Hp = stat.maxHp;
                     }
                 }
             }
@@ -95,9 +95,9 @@ namespace ReadingStrike.Game.InGame
         void InputPointMove()
         {
             if (!isMouseMove) return;
-            Vector3 movePos = Vector3.MoveTowards(rb.position, mouseMovePos, Time.deltaTime * stat.MoveSpeed);
+            Vector3 movePos = Vector3.MoveTowards(rb.position, mouseMovePos, Time.deltaTime * stat.moveSpeed);
             rb.MovePosition(movePos);
-            rb.MoveRotation(Quaternion.LookRotation(Vector3.Slerp(mouseMovePos, rb.position, stat.MoveSpeed)));
+            rb.MoveRotation(Quaternion.LookRotation(Vector3.Slerp(mouseMovePos, rb.position, stat.moveSpeed)));
             if (rb.position - mouseMovePos == Vector3.zero)
             {
                 isMouseMove = false;

@@ -10,10 +10,16 @@ namespace ReadingStrike.Game.InGame
     [Serializable]
     public class SkillSet
     {
+        [SerializeField] SkillSO skillSo;
+        public readonly SkillData data;
         public int settingNum;
-        public SkillSO skillSo;
         public float curCooltime;
         public bool isCooltime;
+        public SkillSet()
+        {
+            if (skillSo != null)
+                data = skillSo.Data;
+        }
     }
     public class SkillController : MonoBehaviour
     {
@@ -61,7 +67,7 @@ namespace ReadingStrike.Game.InGame
                 return;
             }
             CurSkill = skillSetList[index];
-            skillOrbRend.material.color = skillSetList[index].skillSo.Color;
+            skillOrbRend.material.color = skillSetList[index].data.color;
             IsSkillCharged = true;
         }
 
@@ -94,7 +100,7 @@ namespace ReadingStrike.Game.InGame
                 SkillReset();
                 IsStifness = true;
                 skillOrbRend.material.color = Color.gray;
-                float awaitTime = IsSkillCharged ? CurSkill.skillSo.StifnessTime : SkillSetList[0].skillSo.StifnessTime;
+                float awaitTime = IsSkillCharged ? CurSkill.data.stifnessTime : SkillSetList[0].data.stifnessTime;
 
                 await UniTask.Delay((int)(awaitTime * 1000), cancellationToken: cts.Token);
 
@@ -118,7 +124,7 @@ namespace ReadingStrike.Game.InGame
                 CTSSetter.CTSSet(ref cts);
                 temp.isCooltime = true;
 
-                await UniTask.Delay((int)(temp.skillSo.Cooltime * 1000), cancellationToken: cts.Token);
+                await UniTask.Delay((int)(temp.data.cooltime * 1000), cancellationToken: cts.Token);
 
                 temp.isCooltime = false;
             }

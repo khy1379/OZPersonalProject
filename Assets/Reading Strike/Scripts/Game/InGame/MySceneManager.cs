@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using ReadingStrike.Game.GameData;
 
 namespace ReadingStrike.Game.InGame
 {

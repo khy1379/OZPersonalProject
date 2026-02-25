@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using ReadingStrike.Game.GameData;
 using System.Threading;
 namespace ReadingStrike.Game.InGame
 {
@@ -18,7 +19,7 @@ namespace ReadingStrike.Game.InGame
             BattleResultType resultType = BattleResultType.None;
             if (AChar.IsSkillCharged && BChar.IsSkillCharged)
             {
-                resultType = BattleResult(AChar.ChargedSkill.skillSo.Type, BChar.ChargedSkill.skillSo.Type);
+                resultType = BattleResult(AChar.ChargedSkill.data.type, BChar.ChargedSkill.data.type);
             }
             else if(AChar.IsSkillCharged && !BChar.IsSkillCharged)
             {
