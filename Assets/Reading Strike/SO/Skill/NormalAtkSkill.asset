@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d76f859f0d4b784da33752f8bffa21a, type: 3}
   m_Name: NormalAtkSkill
   m_EditorClassIdentifier: 
-  skillName: NormalAtk
-  triggerName: NormalAtk
-  power: 1
-  type: 0
-  cooltime: 0.3333333
-  stifnessTime: 1
-  color: {r: 1, g: 0, b: 0, a: 0}
-  knockBackPower: 1
-  battleFrameValue: 0
+  data:
+    skillName: NormalAtk
+    power: 1
+    type: 0
+    cooltime: 0.3333333
+    stifnessTime: 1
+    color: {r: 1, g: 0, b: 0, a: 1}
+    knockBackPower: 0
+    battleFrameValue: 0
