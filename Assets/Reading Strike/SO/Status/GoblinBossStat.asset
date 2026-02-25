@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a9393f3ea9f1ea46bd9eb4780deea29, type: 3}
-  m_Name: NormalStat
+  m_Name: GoblinBossStat
   m_EditorClassIdentifier: 
-  maxHp: 100
-  atk: 10
-  def: 0
-  moveSpeed: 5
+  data:
+    maxHp: 500
+    atk: 20
+    def: 5
+    moveSpeed: 5

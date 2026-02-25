@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d76f859f0d4b784da33752f8bffa21a, type: 3}
   m_Name: DefanseSkill
   m_EditorClassIdentifier: 
-  skillName: Defense
-  triggerName: Defense
-  power: 0
-  type: 2
-  cooltime: 1
-  stifnessTime: 1.5
-  color: {r: 0, g: 1, b: 0, a: 0}
-  knockBackPower: 0
+  data:
+    skillName: Defense
+    power: 0
+    type: 2
+    cooltime: 1
+    stifnessTime: 1.5
+    color: {r: 0, g: 1, b: 0, a: 1}
+    knockBackPower: 0
+    battleFrameValue: 0

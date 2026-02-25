@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace ReadingStrike.Game.GameData
 {
-    public enum SceneType { Title, Village, Dungeon }
+    public enum SceneType { Title, Village, PlaneDungeon }
     public enum InGameState { Playing, Pause, Death }
     public enum SkillType { NormalAtk, StrongAtk, Defense }
     public enum BattleResultType { None, AWin, BWin, Draw }

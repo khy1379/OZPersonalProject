@@ -8,8 +8,8 @@ namespace ReadingStrike.Game.GameData
     {
         public int dIndex;
         public DungeonType dType;
-        public SceneType targetScene;
-        public Image dImage;
+        public SceneType dScene;
+        public Sprite dImage;
     }
     [CreateAssetMenu(fileName = "DungeonDataSO", menuName = "SO/DungeonDataSO")]
     public class DungeonDataSO : ScriptableObject

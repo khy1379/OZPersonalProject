@@ -47,7 +47,7 @@ namespace ReadingStrike.Game.InGame
             else if (Input.GetKeyDown(KeyCode.Alpha2))
                 SceneChange(SceneType.Village);
             else if (Input.GetKeyDown(KeyCode.Alpha3))
-                SceneChange(SceneType.Dungeon);
+                SceneChange(SceneType.PlaneDungeon);
         }
         #region Game 시작 시 함수
         void GameInit()
@@ -66,7 +66,7 @@ namespace ReadingStrike.Game.InGame
         }
         public void SceneChangeTitle() { sceneMgr.SceneChangeStartCo(SceneType.Title); }
         public void SceneChangeVillage() { sceneMgr.SceneChangeStartCo(SceneType.Village); }
-        public void SceneChangeDungeon() { sceneMgr.SceneChangeStartCo(SceneType.Dungeon); }
+        public void SceneChangeDungeon() { sceneMgr.SceneChangeStartCo(SceneType.PlaneDungeon); }
         #endregion
     }
 }
