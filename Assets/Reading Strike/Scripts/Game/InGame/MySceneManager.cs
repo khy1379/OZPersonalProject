@@ -30,8 +30,8 @@ namespace ReadingStrike.Game.InGame
         {
             try
             {
-                int sceneIndex = (int)type;
-                if (!IsSceneChangePossible(sceneIndex)) return;
+                string sceneName = type.ToString();
+                if (!IsSceneChangePossible(sceneName)) return;
                 IsSceneChanging = true;
                 fadeImg.gameObject.SetActive(true);
                 while(curFadeAlpha < 1)
@@ -39,7 +39,7 @@ namespace ReadingStrike.Game.InGame
                     FadeOut();
                     await UniTask.Yield();
                 }
-                await SceneManager.LoadSceneAsync(sceneIndex);
+                await SceneManager.LoadSceneAsync(sceneName);
                 FadeReset();
                 fadeImg.gameObject.SetActive(false);
                 IsSceneChanging = false;
@@ -63,14 +63,14 @@ namespace ReadingStrike.Game.InGame
             curFadeAlpha = 0;
             fadeImg.color = new Color(0, 0, 0, 0);
         }
-        bool IsSceneChangePossible(int index)
+        bool IsSceneChangePossible(string sceneName)
         {
             if (IsSceneChanging)
             {
                 Debug.Log("Scene 변경중");
                 return false;
             }
-            else if (SceneManager.GetActiveScene().buildIndex == index)
+            else if (SceneManager.GetActiveScene().name == sceneName)
             {
                 Debug.Log("같은 Scene으로 이동 불가");
                 return false;

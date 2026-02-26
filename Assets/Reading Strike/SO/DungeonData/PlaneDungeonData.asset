@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlaneDungeonData
   m_EditorClassIdentifier: 
   data:
-    dIndex: 1
+    dIndex: 0
     dType: 0
     dScene: 2
     dImage: {fileID: 21300000, guid: cb5d3b91f597f8645a4b2d9a0ad6488a, type: 3}
