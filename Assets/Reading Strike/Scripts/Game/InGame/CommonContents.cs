@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace ReadingStrike.Game.GameData
 {
-    public enum SceneType { Title, Village, PlaneDungeon }
+    public enum SceneType { Title, Village, PlaneDungeon, TestScene1, TestScene2, TestScene3 }
     public enum InGameState { Playing, Pause, Death }
     public enum SkillType { NormalAtk, StrongAtk, Defense }
     public enum BattleResultType { None, AWin, BWin, Draw }
@@ -19,7 +19,7 @@ namespace ReadingStrike.Game.GameData
         Death,
         Idle
     }
-    public enum DungeonType { Plane, }
+    public enum DungeonType { Plane, Test1, Test2, Test3 }
     //public interface ISkillUser
     //{
     //    public SkillSet ChargedSkill { get; }

@@ -59,14 +59,14 @@ namespace ReadingStrike.Game.InGame
         public void AddRequestSceneChange(Action<SceneType> func) { sceneMgr.AddRequestSceneChange(func); }
         #endregion
         #region SceneChange 함수
-        void SceneChange(SceneType type) 
+        public void SceneChange(SceneType type) 
         { 
             sceneMgr.SceneChangeStartCo(type);
             CurSceneType = type;
         }
-        public void SceneChangeTitle() { sceneMgr.SceneChangeStartCo(SceneType.Title); }
-        public void SceneChangeVillage() { sceneMgr.SceneChangeStartCo(SceneType.Village); }
-        public void SceneChangeDungeon() { sceneMgr.SceneChangeStartCo(SceneType.PlaneDungeon); }
+        public void SceneChangeTitle() { SceneChange(SceneType.Title); }
+        public void SceneChangeVillage() { SceneChange(SceneType.Village); }
+        public void SceneChangeDungeon() { SceneChange(SceneType.PlaneDungeon); }
         #endregion
     }
 }
