@@ -11,6 +11,7 @@ namespace ReadingStrike.Game.GameData
         public int atk;
         public int def;
         public float moveSpeed;
+        public CharacterType charType;
     }
     [CreateAssetMenu(fileName = "StatusSO", menuName = "SO/StatusSO")]
     public class StatSO : ScriptableObject
