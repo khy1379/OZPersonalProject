@@ -75,12 +75,12 @@ GameObject:
   - component: {fileID: 212259699631456127}
   - component: {fileID: 1235250777562108294}
   m_Layer: 6
-  m_Name: SkillRadius
+  m_Name: SkillRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &212259699631456127
 Transform:
   m_ObjectHideFlags: 0
@@ -139,7 +139,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6,
     type: 3}
-  m_Color: {r: 0, g: 0, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -254,16 +254,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c319e36f8e3054793545ac29e7bc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statSO: {fileID: 0}
+  statSO: {fileID: 11400000, guid: 1f592dc9afff795419dd814d12fb25a2, type: 2}
   hp: 100
   cAnim: {fileID: 4627158679476270581}
   sc: {fileID: 238394878605303779}
   rb: {fileID: 7223544703090677931}
   ccm: {fileID: -3624950664976714267}
+  hpBar: {fileID: 0}
   targetLm:
     serializedVersion: 2
     m_Bits: 512
   mouseMovePos: {x: 0, y: 0, z: 0}
+  skillRange: {fileID: 1235250777562108294}
+  moveTartgetPos: {fileID: 0}
 --- !u!114 &238394878605303779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,7 +293,9 @@ MonoBehaviour:
     curCooltime: 0
     isCooltime: 0
   skillOrbRend: {fileID: 1577370479998772529}
-  searchedDistance: 2
+  materials:
+  - {fileID: 2100000, guid: 8205385e2b5635c48a533b936377f3d4, type: 2}
+  - {fileID: 2100000, guid: e79e432a37812c944ba870b8e11895f3, type: 2}
 --- !u!114 &-3624950664976714267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,7 +803,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 3e81e2ee5ee0a484590d720980a665d5, type: 2}
+      objectReference: {fileID: 9100000, guid: 73a835b20bb1c4d4c9cf6235cc14a004, type: 2}
     - target: {fileID: 7673214680746681040, guid: 24fc2c3e62c52bf4e9e63fd980b8e85d,
         type: 3}
       propertyPath: m_Layer

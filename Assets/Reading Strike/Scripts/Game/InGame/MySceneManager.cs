@@ -11,7 +11,9 @@ namespace ReadingStrike.Game.InGame
     public class SceneChangeEvent
     {
         public event Action<SceneType> RequestSceneChange;
-        public void RaiseRequesetSceneChange(SceneType type) { RequestSceneChange?.Invoke(type); }
+        public event Action RequestSceneChangeCompleted;
+        public void RaiseSceneChange(SceneType type) { RequestSceneChange?.Invoke(type); }
+        public void RaiseSceneChangeCompleted() { RequestSceneChangeCompleted?.Invoke(); }
     }
     public class MySceneManager : MonoBehaviour
     {
@@ -43,7 +45,8 @@ namespace ReadingStrike.Game.InGame
                 FadeReset();
                 fadeImg.gameObject.SetActive(false);
                 IsSceneChanging = false;
-                changeEvent.RaiseRequesetSceneChange(type);
+                changeEvent.RaiseSceneChange(type);
+                changeEvent.RaiseSceneChangeCompleted();
             }
             catch
             {
@@ -77,6 +80,9 @@ namespace ReadingStrike.Game.InGame
             }
             else return true;
         }
-        public void AddRequestSceneChange(Action<SceneType> func) { changeEvent.RequestSceneChange += func; }
+        public void AddEventSceneChange(Action<SceneType> func) => changeEvent.RequestSceneChange += func;
+        public void AddEventSceneChangeCompleted(Action func) => changeEvent.RequestSceneChangeCompleted += func;
+        public void RemoveEventSceneChange(Action<SceneType> func) => changeEvent.RequestSceneChange -= func;
+        public void RemoveEventSceneChangeCompleted(Action func) => changeEvent.RequestSceneChangeCompleted -= func;
     }
 }

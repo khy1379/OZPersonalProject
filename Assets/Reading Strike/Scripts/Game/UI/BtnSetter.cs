@@ -10,7 +10,7 @@ namespace ReadingStrike.Game.UI
         [SerializeField] protected List<Button> btnList;
         private void OnDestroy()
         {
-            BtnOnClickEventAllRemover();
+            OnDestroyFeat();
         }
         public void BtnOnClickEventSetting(int index, Action func, bool isClear = false) 
         {
@@ -27,6 +27,10 @@ namespace ReadingStrike.Game.UI
             {
                 btn.onClick.RemoveAllListeners();
             }
+        }
+        protected virtual void OnDestroyFeat()
+        {
+            BtnOnClickEventAllRemover();
         }
     }
 }

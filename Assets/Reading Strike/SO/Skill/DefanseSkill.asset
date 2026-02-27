@@ -18,6 +18,7 @@ MonoBehaviour:
     type: 2
     cooltime: 1
     stifnessTime: 1.5
-    color: {r: 0, g: 1, b: 0, a: 1}
+    skillMat: {fileID: 2100000, guid: c000abd47e5c9424ca9b500cadba5708, type: 2}
     knockBackPower: 0
     battleFrameValue: 0
+    skillRange: 1.5

@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class HPBar : MonoBehaviour
+using UnityEngine.UI;
+namespace ReadingStrike.Game.UI
 {
-    // Start is called before the first frame update
-    void Start()
+    public class HPBar : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [SerializeField] Slider hpBar;
+        public void HPBarValueSet(float value)
+        {
+            hpBar.value = value;
+        }
     }
 }

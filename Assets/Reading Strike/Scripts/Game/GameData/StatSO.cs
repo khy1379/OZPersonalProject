@@ -17,6 +17,6 @@ namespace ReadingStrike.Game.GameData
     public class StatSO : ScriptableObject
     {
         [SerializeField] StatData data;
-        public ref readonly StatData Data => ref data;
+        public StatData Data => data;
     }
 }

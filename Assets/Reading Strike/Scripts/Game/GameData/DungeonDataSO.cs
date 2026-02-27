@@ -13,8 +13,8 @@ namespace ReadingStrike.Game.GameData
     }
     [CreateAssetMenu(fileName = "DungeonDataSO", menuName = "SO/DungeonDataSO")]
     public class DungeonDataSO : ScriptableObject
-    {
+    {   
         [SerializeField] DungeonData data;
-        public ref readonly DungeonData Data => ref data;
+        public DungeonData Data => data;
     }
 }

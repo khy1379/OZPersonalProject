@@ -11,41 +11,65 @@ namespace ReadingStrike.Game.InGame
     public class SkillSet
     {
         [SerializeField] SkillSO skillSo;
-        public readonly SkillData data;
+        public SkillData Data { get; private set; }
         public int settingNum;
         public float curCooltime;
         public bool isCooltime;
-        public SkillSet()
+        public void SkillDataSet()
         {
             if (skillSo != null)
-                data = skillSo.Data;
+                Data = skillSo.Data;
+            else
+                Debug.Log("skillSo 없음");
         }
+    }
+    public class SkillEvent
+    {
+        public event Action<int> RequestSkillUseImpossible;
+        //public event Action<int> RequestSkillCooltime;
+        public event Action<int> RequestSkillUsePossible;
+        public event Action RequestSkillCharging;
+        public event Action RequestSkillCancel;
+        public void RaiseSkillUseImpossible(int skillIndex) => RequestSkillUseImpossible?.Invoke(skillIndex);
+        //public void RaiseSkillCooltime(int skillIndex) => RequestSkillCooltime?.Invoke(skillIndex);
+        public void RaiseSkillUsePossible(int skillIndex) => RequestSkillUsePossible?.Invoke(skillIndex);
+        public void RaiseSkillCharging() => RequestSkillCharging?.Invoke();
+        public void RaiseSkillCancel() => RequestSkillCancel?.Invoke();
     }
     public class SkillController : MonoBehaviour
     {
         [SerializeField] List<SkillSet> skillSetList;
         public List<SkillSet> SkillSetList => skillSetList;
         public SkillSet CurSkill { get; private set; }
-        [SerializeField] public int SkillCount => skillSetList.Count; 
+        [SerializeField] public int SkillCount => skillSetList.Count;
         [SerializeField] private MeshRenderer skillOrbRend;
         public bool IsSkillCharged { get; private set; }
         public bool IsStifness { get; private set; }
-        public float searchedDistance = 1f;
         CancellationTokenSource cts;
+        SkillEvent se = new SkillEvent();
 
+        [SerializeField] Material[] materials;
         private void Start()
         {
             SkillControllerInit();
+        }
+        private void OnDestroy()
+        {
+            CTSSetter.CTSCancel(ref cts);
         }
         void SkillControllerInit()
         {
             IsSkillCharged = false;
             IsStifness = false;
+            for(int i = 0; i < SkillSetList.Count; i++)
+            {
+                SkillSetList[i].SkillDataSet();
+            }
             if (CurSkill == null && SkillSetList != null) CurSkill = SkillSetList[0];
             if (skillOrbRend != null && !skillOrbRend.gameObject.activeSelf)
             {
                 skillOrbRend.gameObject.SetActive(true);
-                skillOrbRend.material.color = Color.white;
+                skillOrbRend.material = materials[0];
             }
         }
         public void SkillCharging(int index)
@@ -67,8 +91,9 @@ namespace ReadingStrike.Game.InGame
                 return;
             }
             CurSkill = skillSetList[index];
-            skillOrbRend.material.color = skillSetList[index].data.color;
+            skillOrbRend.material = skillSetList[index].Data.skillMat;
             IsSkillCharged = true;
+            se.RaiseSkillCharging();
         }
 
         public void SkillCancel()
@@ -89,7 +114,8 @@ namespace ReadingStrike.Game.InGame
         void SkillReset()
         {
             IsSkillCharged = false;
-            skillOrbRend.material.color = Color.white;
+            skillOrbRend.material = materials[0];
+            se.RaiseSkillCancel();
         }
         async UniTaskVoid StifnessTask()
         {
@@ -99,15 +125,24 @@ namespace ReadingStrike.Game.InGame
                 CTSSetter.CTSSet(ref cts);
                 SkillReset();
                 IsStifness = true;
-                skillOrbRend.material.color = Color.gray;
-                float awaitTime = IsSkillCharged ? CurSkill.data.stifnessTime : SkillSetList[0].data.stifnessTime;
+                for (int i = 0; i < 3; i++)
+                {
+                    se.RaiseSkillUseImpossible(i);
+                }
+                skillOrbRend.material = materials[1];
+                float awaitTime = IsSkillCharged ? CurSkill.Data.stifnessTime : SkillSetList[0].Data.stifnessTime;
 
                 await UniTask.Delay((int)(awaitTime * 1000), cancellationToken: cts.Token);
 
-                skillOrbRend.material.color = Color.white;
+                skillOrbRend.material = materials[0];
                 IsStifness = false;
+
+                for (int i = 0; i < 3; i++)
+                {
+                    se.RaiseSkillUsePossible(i);
+                }
             }
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
                 CTSSetter.CTSCancel(ref cts);
             }
@@ -118,17 +153,19 @@ namespace ReadingStrike.Game.InGame
         }
         async UniTaskVoid CooltimeTask()
         {
-            SkillSet temp = CurSkill;
             try
             {
+                SkillSet temp = CurSkill;
                 CTSSetter.CTSSet(ref cts);
                 temp.isCooltime = true;
-
-                await UniTask.Delay((int)(temp.data.cooltime * 1000), cancellationToken: cts.Token);
+                SkillType getType = temp.Data.type;
+                se.RaiseSkillUseImpossible((int)getType);
+                await UniTask.Delay((int)(temp.Data.cooltime * 1000), cancellationToken: cts.Token);
 
                 temp.isCooltime = false;
+                se.RaiseSkillUsePossible((int)getType);
             }
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
                 CTSSetter.CTSCancel(ref cts);
             }
@@ -139,8 +176,16 @@ namespace ReadingStrike.Game.InGame
         }
         public void OrbSetFalse()
         {
-            skillOrbRend.material.color = Color.gray;
+            skillOrbRend.material = materials[1];
             skillOrbRend.gameObject.SetActive(false);
         }
+        public void AddEventSkillUseImpossible(Action<int> func) => se.RequestSkillUseImpossible += func;
+        public void AddEventSkillUsePossible(Action<int> func) => se.RequestSkillUsePossible += func;
+        public void AddEventSkillCharging(Action func) => se.RequestSkillCharging += func;
+        public void AddEventSkillCancel(Action func) => se.RequestSkillCancel += func;
+        public void RemoveEventSkillUseImpossible(Action<int> func) => se.RequestSkillUseImpossible -= func;
+        public void RemoveEventSkillUsePossible(Action<int> func) => se.RequestSkillUsePossible -= func;
+        public void RemoveEventSkillCharging(Action func) => se.RequestSkillCharging -= func;
+        public void RemoveEventSkillCancel(Action func) => se.RequestSkillCancel -= func;
     }
 }
