@@ -1,11 +1,11 @@
 ﻿using ReadingStrike.Game.GameData;
-using ReadingStrike.Game.UI;
+using ReadingStrike.Game.InGame;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ReadingStrike.Game.InGame
+namespace ReadingStrike.Game.UI
 {
-    public class DungeonSelectManager : MonoBehaviour
+    public class DungeonSelectUIManager : MonoBehaviour
     {
         [SerializeField] List<DungeonDataSO> dungeonDataList;
         [SerializeField] List<DungeonData> curDungeonList = new List<DungeonData>(dungeonBtnCnt);
@@ -34,7 +34,7 @@ namespace ReadingStrike.Game.InGame
             maxPageCnt = (dungeonDataList.Count / 6) + 1;
             DungeonListShowSetting();
             if(GameManager.instance != null)
-            dsUI.BtnOnClickEventSetting(6, () => GameManager.instance.SceneChange(curSelectDungeonScene));
+            dsUI.BtnOnClickEventSetting(6, () => GameManager.instance.SceneChangeStart(curSelectDungeonScene));
         }
         void DungeonListShowSetting()
         {

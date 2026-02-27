@@ -11,7 +11,7 @@ namespace ReadingStrike.Game.UI
         Skill,
         //Item
     }
-    public class VillageUI : BtnSetter
+    public class VillageUIManager : BtnSetter
     {
         [SerializeField] TextMeshProUGUI uiTitleTxt;
         [SerializeField] List<GameObject> panelList;
@@ -34,7 +34,7 @@ namespace ReadingStrike.Game.UI
                 }
                 if (!btnList[i].gameObject.activeSelf)
                 {
-                    Debug.Log($"{(VillageUIBtnType)i}번 버튼 setting");
+                    Debug.Log($"{(VillageUIBtnType)i}번 버튼 setting 안 함");
                     continue;
                 }
                 VillageUIBtnType getType = (VillageUIBtnType)i;

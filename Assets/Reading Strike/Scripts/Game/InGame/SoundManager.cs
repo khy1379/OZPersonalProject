@@ -81,7 +81,11 @@ namespace ReadingStrike.Game.InGame
                 }
             }
 
-            GameManager.instance.AddRequestSceneChange(BGMChange);
+            GameManager.instance.AddEventSceneChange(BGMChange);
+        }
+        public void DestroyFeat()
+        {
+            GameManager.instance.RemoveEventSceneChange(BGMChange);
         }
         public void BGMChange(SceneType type)
         {

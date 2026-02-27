@@ -1,6 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 using ReadingStrike.Game.GameData;
+using ReadingStrike.Game.UI;
+using System;
 namespace ReadingStrike.Game.InGame
 {
     public class Monster : Character
@@ -14,6 +16,7 @@ namespace ReadingStrike.Game.InGame
         protected override void StartSetting()
         {
             usePossibleSkillArr = new int[sc.SkillCount];
+
         }
 
         protected override void UpdateFeat()
@@ -76,7 +79,7 @@ namespace ReadingStrike.Game.InGame
             {
                 while (isPlSearched)
                 {
-                    sc.SkillCharging(Random.Range(1, sc.SkillCount));
+                    sc.SkillCharging(UnityEngine.Random.Range(1, sc.SkillCount));
                     await UniTask.Delay(1000, cancellationToken: cts.Token);
                 }
             }
@@ -92,5 +95,7 @@ namespace ReadingStrike.Game.InGame
         //    Gizmos.DrawWireSphere(transform.position, searchRadius);
         //    //Gizmos.DrawLine(rb.position, rb.position + rb.transform.forward * sc.searchedDistance);
         //}
+        public void HPBarSetting(HPBar hpBar) => this.hpBar = hpBar;
+        public void HPBarClear() => hpBar = null;
     }
 }

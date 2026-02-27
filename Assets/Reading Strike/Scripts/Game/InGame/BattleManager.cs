@@ -2,47 +2,77 @@
 using UnityEngine;
 using ReadingStrike.Game.GameData;
 using System.Threading;
+using ReadingStrike.Game.UI;
 namespace ReadingStrike.Game.InGame
 {
+    public class BattleEvent
+    {
+        public event Action RequestPlayerWin;
+        public void RaisePlayerWin() => RequestPlayerWin?.Invoke();
+    }
     public class BattleManager : MonoBehaviour
     {
+        public int curDungeonMonMaxCnt = 1;
+        public int curDungeonMonCnt;
         public static BattleManager instance;
         public event Action<BattleResultType> RequestBattleResult;
+        [SerializeField] MonsterHPBar monHpBar;
+        BattleEvent be = new BattleEvent();
         private void Awake()
         {
-            if (instance != null) Destroy(gameObject);
             instance = this;
         }
-        public void RaiseBattleResult(BattleResultType battleResult) { RequestBattleResult?.Invoke(battleResult); }
-        public void BattleStart(Character AChar, Character BChar)
+        private void Start()
         {
-            BattleResultType resultType = BattleResultType.None;
-            if (AChar.IsSkillCharged && BChar.IsSkillCharged)
+            curDungeonMonCnt = curDungeonMonMaxCnt;
+        }
+        private void OnDestroy()
+        {
+            //instance = null;
+        }
+        public void MonsterCntDown()
+        {
+            curDungeonMonCnt--;
+            if(curDungeonMonCnt == 0)
             {
-                resultType = BattleResult(AChar.ChargedSkill.data.type, BChar.ChargedSkill.data.type);
+                be.RaisePlayerWin();
             }
-            else if(AChar.IsSkillCharged && !BChar.IsSkillCharged)
+        }
+        public void RaiseBattleResult(BattleResultType battleResult) { RequestBattleResult?.Invoke(battleResult); }
+        public void BattleStart(Character pl, Character mon)
+        {
+            pl.MoveStop();
+            mon.MoveStop();
+            monHpBar.MonHPBarSetting(mon);
+            BattleResultType resultType = BattleResultType.None;
+            if (pl.IsSkillCharged && mon.IsSkillCharged)
+            {
+                resultType = BattleResult(pl.ChargedSkill.Data.type, mon.ChargedSkill.Data.type);
+            }
+            else if(pl.IsSkillCharged && !mon.IsSkillCharged)
             {
                 resultType = BattleResultType.AWin;
             }
-            else if(!AChar.IsSkillCharged && BChar.IsSkillCharged)
+            else if(!pl.IsSkillCharged && mon.IsSkillCharged)
             {
                 resultType = BattleResultType.BWin;
             }
             switch (resultType)
             {
                 case BattleResultType.Draw:
-                    AChar.BattleDrawAction();
-                    BChar.BattleDrawAction();
+                    pl.BattleDrawAction();
+                    mon.BattleDrawAction();
                     RaiseBattleResult(BattleResultType.Draw);
                     break;
                 case BattleResultType.AWin:
-                    AChar.BattleWinAction(BChar);
+                    pl.BattleWinAction(mon);
                     break;
                 case BattleResultType.BWin:
-                    BChar.BattleWinAction(AChar);
+                    mon.BattleWinAction(pl);
                     break;
             }
+            if (mon.IsDeath)
+                MonsterCntDown();
         }
         BattleResultType BattleResult(SkillType plSkillType, SkillType monSkillType)
         {
@@ -94,5 +124,7 @@ namespace ReadingStrike.Game.InGame
             }
             return returnType;
         }
+        public void AddEventPlayerWin(Action func) => be.RequestPlayerWin += func;
+        public void RemoveEventPlayerWin(Action func) => be.RequestPlayerWin -= func;
     }
 }

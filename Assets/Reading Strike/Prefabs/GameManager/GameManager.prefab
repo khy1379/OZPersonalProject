@@ -2999,6 +2999,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneMgr: {fileID: 3650597502225468401}
   soundMgr: {fileID: 2258250449572876371}
+  volumePanel: {fileID: 2972049059711840710}
 --- !u!114 &3650597502225468401
 MonoBehaviour:
   m_ObjectHideFlags: 0

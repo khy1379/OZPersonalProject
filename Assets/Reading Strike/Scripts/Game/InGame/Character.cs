@@ -1,13 +1,20 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using ReadingStrike.Game.GameData;
+using ReadingStrike.Game.UI;
 using TMPro;
 using UnityEngine;
 namespace ReadingStrike.Game.InGame
 {
+    public class CharacterEvent
+    {
+        public event Action RequestDie;
+        public void RaiseDie() => RequestDie?.Invoke();
+    }
     public abstract class Character : MonoBehaviour
     {
         #region Variable & Property
-        protected virtual bool CheckPlayer => false; 
+        protected virtual bool CheckPlayer => false;
         #region Stat
         [SerializeField] protected StatSO statSO;
         protected StatData stat;
@@ -20,18 +27,27 @@ namespace ReadingStrike.Game.InGame
                 hp = value;
                 if (hp < 0) hp = 0;
                 else if (stat.maxHp < hp) hp = stat.maxHp;
+                float hpFValue = (float)hp / (float)stat.maxHp;
+                Debug.Log(hpFValue);
+                if (hpBar != null) hpBar.HPBarValueSet(hpFValue);
             }
         }
         #endregion
 
         #region IBattleable Property
-        public SkillSet ChargedSkill => sc.CurSkill; 
-        public bool CurSkillUse => sc.SkillUse(); 
+        public bool IsMove { get; protected set; }
+        public SkillSet ChargedSkill => sc.CurSkill;
+        public bool CurSkillUse => sc.SkillUse();
         public bool IsSkillCharged => sc.IsSkillCharged;
-        public int CurSkillUseDamage => (int)(stat.atk * sc.CurSkill.data.power);
+        public int CurSkillUseDamage => (int)(stat.atk * sc.CurSkill.Data.power);
         public bool IsDeath { get; protected set; }
         public bool CheckBattleTiming { get; }
         public bool IsGetDamaged { get { return cAnim.isGetDamaged; } set { cAnim.isGetDamaged = value; } }
+        #endregion
+
+        #region event
+        CharacterEvent ce = new CharacterEvent();
+
         #endregion
 
         #region GetComponent Target
@@ -39,9 +55,11 @@ namespace ReadingStrike.Game.InGame
         [SerializeField] protected SkillController sc;
         [SerializeField] protected Rigidbody rb;
         [SerializeField] protected CharacterControllerMove ccm;
+        [SerializeField] protected HPBar hpBar;
         #endregion
 
         #region Other
+        [SerializeField] protected SpriteRenderer skillRange;
         [SerializeField] protected LayerMask targetLm;
         protected CancellationTokenSource cts;
         #endregion
@@ -64,8 +82,10 @@ namespace ReadingStrike.Game.InGame
             }
             if (ccm != null)
             {
-                ccm.InitSetting(stat.moveSpeed);
+                ccm.InitSpeedSetting(stat.moveSpeed);
             }
+            sc.AddEventSkillCharging(SkillRangeShow);
+            sc.AddEventSkillCancel(SkillRangeHide);
             StartSetting();
         }
         private void Update()
@@ -78,12 +98,18 @@ namespace ReadingStrike.Game.InGame
         }
         private void OnDestroy()
         {
-            CTSSetter.CTSCancel(ref cts);
+            OnDestroySetting();
         }
         protected abstract void UpdateFeat();
         protected abstract void FixedUpdateFeat();
         protected abstract void StartSetting();
-        public virtual void GetDamaged(int damage)
+        protected virtual void OnDestroySetting()
+        {
+            CTSSetter.CTSCancel(ref cts);
+            sc.RemoveEventSkillCharging(SkillRangeShow);
+            sc.RemoveEventSkillCancel(SkillRangeHide);
+        }
+        public void GetDamaged(int damage)
         {
             if (IsDeath) return;
             Hp -= damage;
@@ -92,6 +118,7 @@ namespace ReadingStrike.Game.InGame
             {
                 IsDeath = true;
                 sc.OrbSetFalse();
+                ce.RaiseDie();
             }
             else
             {
@@ -107,7 +134,7 @@ namespace ReadingStrike.Game.InGame
         {
             if (IsSkillCharged)
             {
-                switch (ChargedSkill.data.type)
+                switch (ChargedSkill.Data.type)
                 {
                     case SkillType.NormalAtk:
                         StartAnimation(AnimationTriggerType.NormalAtk);
@@ -158,19 +185,45 @@ namespace ReadingStrike.Game.InGame
         protected void SkillUseSearching()
         {
             if (!IsSkillCharged) return;
-            if (Physics.Raycast(rb.transform.position, rb.transform.forward, out RaycastHit hit, sc.searchedDistance, targetLm))
+            if (Physics.Raycast(rb.transform.position, rb.transform.forward, out RaycastHit hit, sc.CurSkill.Data.skillRange, targetLm))
             {
                 if (hit.rigidbody.TryGetComponent(out Character temp))
                 {
-                    BattleManager.instance.BattleStart(this, temp);
-                }
-                else
-                {
-                    Debug.Log("IBattleable 없음");
+                    if (CheckPlayer)
+                    {
+                        BattleManager.instance.BattleStart(this, temp);
+                    }
+                    else
+                    {
+                        BattleManager.instance.BattleStart(temp, this);
+                    }
                 }
             }
         }
+        void SkillRangeShow()
+        {
+            skillRange.gameObject.SetActive(true);
+            float sRange = sc.CurSkill.Data.skillRange;
+            skillRange.transform.localScale = new Vector3(0.1f, sRange);
+            skillRange.transform.localPosition = new Vector3(0, 0.01f, sRange / 2f);
+            skillRange.material.color = sc.CurSkill.Data.skillMat.color;
+        }
+        void SkillRangeHide()
+        {
+            skillRange.gameObject.SetActive(false);
+        }
+        public virtual void MoveStop()
+        {
+            IsMove = false;
+            cAnim.SetAnimFloat("Speed", 0);
+        }
         #endregion
+        #region Event
+        public void AddEventDie(Action func) => ce.RequestDie += func;
+        public void RemoveEventDie(Action func) => ce.RequestDie -= func;
+
+        #endregion
+
         #endregion
     }
 }

@@ -1,12 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.EventSystems;
 namespace ReadingStrike.Game.InGame
 {
+
     public class Player : Character
     {
         protected override bool CheckPlayer { get { return true; } }
-        private float hor, ver;
-        private bool isMouseMove = false;
+        public SkillController Sc { get { return sc; } }
+        //public static Player instanse;
         [SerializeField] Vector3 mouseMovePos = Vector3.zero;
+        [SerializeField] SpriteRenderer moveTartgetPos;
+        private void Awake()
+        {
+            GameManager.instance.PlayerSetting(this);
+        }
         protected override void StartSetting()
         {
 
@@ -23,62 +31,35 @@ namespace ReadingStrike.Game.InGame
         {
             if (!IsDeath)
             {
-                //InputPointMove();
+                InputPointMove();
                 SkillUseSearching();
             }
         }
+        protected override void OnDestroySetting()
+        {
+            base.OnDestroySetting();
+        }
         void InputKey()
         {
-            hor = Input.GetAxisRaw("Horizontal");
-            ver = Input.GetAxisRaw("Vertical");
-            if (hor != 0 || ver != 0)
+            if (Input.GetMouseButtonDown(0) && !sc.IsStifness && !EventSystem.current.IsPointerOverGameObject(-1))
             {
-                cAnim.SetAnimFloat("Speed", 1);
+                InputPoint();
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.Z))
             {
-                cAnim.SetAnimFloat("Speed", 0);
+                sc.SkillCharging(0);
             }
-            if (ver > 0 || hor > 0) isMouseMove = false;
-            ccm.CCMove(hor, ver);
-
-            if (cAnim.GetAnimBool("InBattle"))
+            else if (Input.GetKeyDown(KeyCode.X))
             {
-                if (Input.GetKeyDown(KeyCode.Z))
-                {
-                    sc.SkillCharging(0);
-                }
-                else if (Input.GetKeyDown(KeyCode.X))
-                {
-                    sc.SkillCharging(1);
-                }
-                else if (Input.GetKeyDown(KeyCode.C))
-                {
-                    sc.SkillCharging(2);
-                }
-                else if (Input.GetKeyDown(KeyCode.Q))
-                {
-                    sc.SkillCancel();
-                }
-                else if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    cAnim.SetAnimBool("InBattle", false);
-                }
-                else if (Input.GetKeyDown(KeyCode.E))
-                {
-                    GetDamaged(10);
-                }
+                sc.SkillCharging(1);
             }
-            else
+            else if (Input.GetKeyDown(KeyCode.C))
             {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    cAnim.SetAnimBool("InBattle", true);
-                    if (IsDeath)
-                    {
-                        Hp = stat.maxHp;
-                    }
-                }
+                sc.SkillCharging(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                sc.SkillCancel();
             }
         }
         void InputPoint()
@@ -86,34 +67,51 @@ namespace ReadingStrike.Game.InGame
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                mouseMovePos = hit.point;
+                if (hit.collider.gameObject.layer == targetLm)
+                {
+                    mouseMovePos = hit.transform.position;
+                }
+                else
+                {
+                    mouseMovePos = hit.point;
+                }
                 mouseMovePos.y = rb.position.y;
-                isMouseMove = true;
+                cAnim.SetAnimFloat("Speed", 1);
+                IsMove = true;
+                moveTartgetPos.gameObject.SetActive(true);
+                moveTartgetPos.transform.position = mouseMovePos;
                 //anim.SetBool("IsPlWalk", true);
             }
         }
         void InputPointMove()
         {
-            if (!isMouseMove) return;
-            Vector3 movePos = Vector3.MoveTowards(rb.position, mouseMovePos, Time.deltaTime * stat.moveSpeed);
-            rb.MovePosition(movePos);
-            rb.MoveRotation(Quaternion.LookRotation(Vector3.Slerp(mouseMovePos, rb.position, stat.moveSpeed)));
-            if (rb.position - mouseMovePos == Vector3.zero)
+            if (!IsMove) return;
+            if (!ccm.ClickMove(rb.position, mouseMovePos))
             {
-                isMouseMove = false;
-                //anim.SetBool("IsPlWalk", false);
+                IsMove = false;
+                moveTartgetPos.gameObject.SetActive(false);
+                cAnim.SetAnimFloat("Speed", 0);
             }
         }
-        private void OnDrawGizmos()
+        public override void MoveStop()
         {
-            Gizmos.color = Color.blue;
-            if (IsSkillCharged) Gizmos.DrawLine(transform.position, transform.position + transform.transform.forward * sc.searchedDistance);
+            base.MoveStop();
+            moveTartgetPos.gameObject.SetActive(false);
         }
+        //private void OnDrawGizmos()
+        //{
+        //    Gizmos.color = Color.blue;
+        //    if (IsSkillCharged) Gizmos.DrawLine(transform.position, transform.position + transform.transform.forward * sc.searchedDistance);
+        //}
         bool CheckMovingPossible()
         {
             if (sc.IsStifness) return true;
 
             return false;
         }
+        public void AddEventSkillUseImpossible(Action<int> func) => sc.AddEventSkillUseImpossible(func);
+        public void AddEventSkillUsePossible(Action<int> func) => sc.AddEventSkillUsePossible(func);
+        public void RemoveEventSkillUseImpossible(Action<int> func) => sc.RemoveEventSkillUseImpossible(func);
+        public void RemoveEventSkillUsePossible(Action<int> func) => sc.RemoveEventSkillUsePossible(func);
     }
 }
