@@ -1,13 +1,11 @@
 ﻿using ReadingStrike.Game.GameData;
 using ReadingStrike.Game.UI;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ReadingStrike.Game.InGame
 {
-    public class DungeonManager : MonoBehaviour
+    public class DungeonSelectManager : MonoBehaviour
     {
         [SerializeField] List<DungeonDataSO> dungeonDataList;
         [SerializeField] List<DungeonData> curDungeonList = new List<DungeonData>(dungeonBtnCnt);
@@ -51,7 +49,6 @@ namespace ReadingStrike.Game.InGame
                 curDungeonList.Add(dungeonDataList[addDungeonCnt].Data);
                 SceneType selectType = curDungeonList[i].dScene;
                 dsUI.DungeonSelectBtnSetting(i, curDungeonList[i], () => SelectDungeon(selectType));
-                //dsUI.DungeonSelectBtnSetting(i, curDungeonList[i]);
             }
         }
         void SelectDungeon(SceneType type)

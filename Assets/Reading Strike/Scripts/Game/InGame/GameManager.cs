@@ -23,7 +23,7 @@ namespace ReadingStrike.Game.InGame
 
         GameManagerEvent gameMgrEvent = new GameManagerEvent();
 
-
+        public bool IsPause { get; private set; }
         private void Awake()
         {
             if (instance != null)
@@ -53,6 +53,20 @@ namespace ReadingStrike.Game.InGame
         void GameInit()
         {
             soundMgr.Init();
+        }
+        #endregion
+        #region Game 전반적 기능
+        public void GamePause()
+        {
+            if (IsPause) return;
+            IsPause = true;
+            Time.timeScale = 0;
+        }
+        public void GameResume()
+        {
+            if (!IsPause) return;
+            IsPause = false;
+            Time.timeScale = 1;
         }
         #endregion
         #region Event 관련 함수

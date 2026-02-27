@@ -20,7 +20,6 @@ namespace ReadingStrike.Game.InGame
                 hp = value;
                 if (hp < 0) hp = 0;
                 else if (stat.maxHp < hp) hp = stat.maxHp;
-                tmp.text = $"{hp}";
             }
         }
         #endregion
@@ -45,7 +44,6 @@ namespace ReadingStrike.Game.InGame
         #region Other
         [SerializeField] protected LayerMask targetLm;
         protected CancellationTokenSource cts;
-        public TextMeshProUGUI tmp;
         #endregion
 
         #endregion

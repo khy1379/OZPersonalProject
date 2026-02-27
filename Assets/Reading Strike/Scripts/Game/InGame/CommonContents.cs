@@ -10,6 +10,7 @@ namespace ReadingStrike.Game.GameData
     public enum InGameState { Playing, Pause, Death }
     public enum SkillType { NormalAtk, StrongAtk, Defense }
     public enum BattleResultType { None, AWin, BWin, Draw }
+    public enum CharacterType { Player, Monster_Normal, Monster_Boss }
     public enum AnimationTriggerType
     {
         NormalAtk,
@@ -19,33 +20,7 @@ namespace ReadingStrike.Game.GameData
         Death,
         Idle
     }
-    public enum DungeonType { Plane, Test1, Test2, Test3 }
-    //public interface ISkillUser
-    //{
-    //    public SkillSet ChargedSkill { get; }
-    //    public bool CurSkillUse { get; }
-    //    public bool IsSkillCharged { get; }
-    //    public int CurSkillUseDamage { get; }
-    //}
-    //public interface IDamageable
-    //{
-    //    public bool IsDeath { get; }
-    //    public void GetDamaged(int damage);
-    //    public void Stifness();
-    //}
-    //public interface IAnimatorable
-    //{
-    //    public void StartAnimation(AnimationTriggerType type);
-    //    public void StartCurSkillAnimation();
-    //    public bool CheckBattleTiming { get; }
-    //    public bool IsGetDamaged { get; }
-    //}
-    //public interface IBattleable : ISkillUser, IDamageable, IAnimatorable
-    //{
-    //    public void BattleDrawAction();
-    //    public bool BattleWinAction(IBattleable cha);
-
-    //}
+    public enum DungeonType { Plane, }
     public static class CTSSetter
     {
         public static void CTSSet(ref CancellationTokenSource cts)
