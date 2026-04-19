@@ -9,14 +9,16 @@ namespace ReadingStrike.Game.InGame
     public class CharacterEvent
     {
         public event Action RequestDie;
+        public event Action<float> RequestHPChange;
         public void RaiseDie() => RequestDie?.Invoke();
+        public void RaiseHPChange(float value) => RequestHPChange?.Invoke(value);
     }
     public abstract class Character : MonoBehaviour
     {
         #region Variable & Property
         protected virtual bool CheckPlayer => false;
         #region Stat
-        [SerializeField] protected StatSO statSO;
+        [SerializeField] protected CharacterType type;
         protected StatData stat;
         [SerializeField] protected int hp;
         public int Hp
@@ -26,10 +28,10 @@ namespace ReadingStrike.Game.InGame
             {
                 hp = value;
                 if (hp < 0) hp = 0;
-                else if (stat.maxHp < hp) hp = stat.maxHp;
-                float hpFValue = (float)hp / (float)stat.maxHp;
-                Debug.Log(hpFValue);
-                if (hpBar != null) hpBar.HPBarValueSet(hpFValue);
+                else if (stat.maxHP < hp) hp = stat.maxHP;
+                //Debug.Log(CurHPValue());
+                //if (hpBar != null) hpBar.HPBarValueSet(hpFValue);
+                ce.RaiseHPChange(CurHPValue());
             }
         }
         #endregion
@@ -55,7 +57,7 @@ namespace ReadingStrike.Game.InGame
         [SerializeField] protected SkillController sc;
         [SerializeField] protected Rigidbody rb;
         [SerializeField] protected CharacterControllerMove ccm;
-        [SerializeField] protected HPBar hpBar;
+        //[SerializeField] protected HPBar hpBar;
         #endregion
 
         #region Other
@@ -70,11 +72,8 @@ namespace ReadingStrike.Game.InGame
 
         private void Start()
         {
-            if (statSO != null)
-            {
-                stat = statSO.Data;
-                hp = stat.maxHp;
-            }
+            StatSetting();
+            hp = stat.maxHP;
             if (cAnim != null)
             {
                 cAnim.OwnerSet(gameObject);
@@ -84,7 +83,7 @@ namespace ReadingStrike.Game.InGame
             {
                 ccm.InitSpeedSetting(stat.moveSpeed);
             }
-            sc.AddEventSkillCharging(SkillRangeShow);
+            if (CheckPlayer) sc.AddEventSkillCharging(SkillRangeShow);
             sc.AddEventSkillCancel(SkillRangeHide);
             StartSetting();
         }
@@ -103,15 +102,25 @@ namespace ReadingStrike.Game.InGame
         protected abstract void UpdateFeat();
         protected abstract void FixedUpdateFeat();
         protected abstract void StartSetting();
+        protected virtual void StatSetting()
+        {
+            if (CheckPlayer)
+                stat = GameManager.instance.GetPlayerStat();
+            else
+                stat = GameManager.instance.GetMonsterStat(type);
+        }
         protected virtual void OnDestroySetting()
         {
             CTSSetter.CTSCancel(ref cts);
-            sc.RemoveEventSkillCharging(SkillRangeShow);
             sc.RemoveEventSkillCancel(SkillRangeHide);
         }
         public void GetDamaged(int damage)
         {
             if (IsDeath) return;
+            if (!IsCritical())
+            {
+                damage -= stat.def;
+            }
             Hp -= damage;
             IsGetDamaged = true;
             if (Hp <= 0)
@@ -124,6 +133,14 @@ namespace ReadingStrike.Game.InGame
             {
                 Stifness();
             }
+        }
+        // 지정된 확률 미만의 값이 나올 경우 크리티컬
+        bool IsCritical()
+        {
+            int checkCritical = UnityEngine.Random.Range(0, 100);
+            if (checkCritical < stat.criticalChance)
+                return true;
+            else return false;
         }
         #region Animation
         public void StartAnimation(AnimationTriggerType type)
@@ -191,16 +208,16 @@ namespace ReadingStrike.Game.InGame
                 {
                     if (CheckPlayer)
                     {
-                        BattleManager.instance.BattleStart(this, temp);
+                        BattleManager.instance.BattleStart(temp);
                     }
                     else
                     {
-                        BattleManager.instance.BattleStart(temp, this);
+                        BattleManager.instance.BattleStart(this);
                     }
                 }
             }
         }
-        void SkillRangeShow()
+        protected void SkillRangeShow()
         {
             skillRange.gameObject.SetActive(true);
             float sRange = sc.CurSkill.Data.skillRange;
@@ -217,11 +234,26 @@ namespace ReadingStrike.Game.InGame
             IsMove = false;
             cAnim.SetAnimFloat("Speed", 0);
         }
+        public void LookEnemy(Vector3 pos)
+        {
+            //Vector3 dir = pos - transform.position;
+            transform.LookAt(pos);
+        }
+        public void HPValueSet()
+        {
+            if (CheckPlayer) DungeonUIManager.instanse.playerHPBar.HPBarValueSet(CurHPValue());
+            else DungeonUIManager.instanse.monsterHPBar.HPBarValueSet(CurHPValue());
+        }
+        float CurHPValue()
+        {
+            return (float)hp / (float)stat.maxHP;
+        }
         #endregion
         #region Event
         public void AddEventDie(Action func) => ce.RequestDie += func;
         public void RemoveEventDie(Action func) => ce.RequestDie -= func;
-
+        public void AddEventChangeHP(Action<float> func) => ce.RequestHPChange += func;
+        public void RemoveEventChangeHP(Action<float> func) => ce.RequestHPChange -= func;
         #endregion
 
         #endregion

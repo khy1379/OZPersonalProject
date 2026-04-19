@@ -5,6 +5,16 @@ using UnityEngine;
 
 namespace ReadingStrike.Game.UI
 {
+    public enum DungeonUIBtnType
+    {
+        PauseAndMenu,
+        PauseClose,
+        PausePanel,
+        Volume,
+        VillageMoveThroughPuase,
+        VillageMoveThroughWin,
+        VillageMoveThroughLose,
+    }
     public class DungeonUIBtnSetter : BtnSetter
     {
         [SerializeField] List<GameObject> panelList;
@@ -15,10 +25,10 @@ namespace ReadingStrike.Game.UI
                 Debug.LogError("버튼 등이 제대로 적용 안 됨");
                 return;
             }
-            BtnOnClickEventSetting(0, PausePanelShow);
-            BtnOnClickEventSetting(1, PausePanelClose);
-            BtnOnClickEventSetting(2, PausePanelClose);
-            BtnOnClickEventSetting(3, VolumePanelShow);
+            BtnOnClickEventSetting((int)DungeonUIBtnType.PauseAndMenu, PausePanelShow);
+            BtnOnClickEventSetting((int)DungeonUIBtnType.PauseClose, PausePanelClose);
+            BtnOnClickEventSetting((int)DungeonUIBtnType.PausePanel, PausePanelClose);
+            BtnOnClickEventSetting((int)DungeonUIBtnType.Volume, VolumePanelShow);
             for (int i = 4; i < btnList.Count; i++)
             {
                 int targetBtnNum = i;

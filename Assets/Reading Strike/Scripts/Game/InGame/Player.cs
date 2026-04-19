@@ -37,7 +37,8 @@ namespace ReadingStrike.Game.InGame
         }
         protected override void OnDestroySetting()
         {
-            base.OnDestroySetting();
+            base.OnDestroySetting(); 
+            sc.RemoveEventSkillCharging(SkillRangeShow);
         }
         void InputKey()
         {
@@ -98,11 +99,13 @@ namespace ReadingStrike.Game.InGame
             base.MoveStop();
             moveTartgetPos.gameObject.SetActive(false);
         }
-        //private void OnDrawGizmos()
-        //{
-        //    Gizmos.color = Color.blue;
-        //    if (IsSkillCharged) Gizmos.DrawLine(transform.position, transform.position + transform.transform.forward * sc.searchedDistance);
-        //}
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.cyan;
+            Vector3 startPos = transform.position + new Vector3(0, 0.5f, 0);
+            //if (IsSkillCharged) Gizmos.DrawLine(transform.position, transform.position + transform.transform.forward * sc.CurSkill.Data.skillRange);
+            if (IsSkillCharged) Gizmos.DrawLine(startPos, startPos + transform.transform.forward * sc.CurSkill.Data.skillRange);
+        }
         bool CheckMovingPossible()
         {
             if (sc.IsStifness) return true;

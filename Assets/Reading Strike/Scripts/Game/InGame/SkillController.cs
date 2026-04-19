@@ -127,6 +127,7 @@ namespace ReadingStrike.Game.InGame
                 IsStifness = true;
                 for (int i = 0; i < 3; i++)
                 {
+                    if (skillSetList[i].isCooltime) continue;
                     se.RaiseSkillUseImpossible(i);
                 }
                 skillOrbRend.material = materials[1];
@@ -159,11 +160,12 @@ namespace ReadingStrike.Game.InGame
                 CTSSetter.CTSSet(ref cts);
                 temp.isCooltime = true;
                 SkillType getType = temp.Data.type;
-                se.RaiseSkillUseImpossible((int)getType);
+                int getTypeNum = (int)getType;
+                se.RaiseSkillUseImpossible(getTypeNum);
                 await UniTask.Delay((int)(temp.Data.cooltime * 1000), cancellationToken: cts.Token);
 
                 temp.isCooltime = false;
-                se.RaiseSkillUsePossible((int)getType);
+                if (!IsStifness) se.RaiseSkillUsePossible(getTypeNum);
             }
             catch (OperationCanceledException)
             {

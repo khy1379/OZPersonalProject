@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ReadingStrike.Game.GameData;
+using ReadingStrike.Game.UI;
 
 namespace ReadingStrike.Game.InGame
 {
@@ -17,14 +18,19 @@ namespace ReadingStrike.Game.InGame
         public SceneType CurSceneType { get; private set; }
         public InGameState CurInGameState { get; private set; }
 
-        [SerializeField] private MySceneManager sceneMgr;
-        [SerializeField] private SoundManager soundMgr;
+        [SerializeField] MySceneManager sceneMgr;
+        [SerializeField] SoundManager soundMgr;
+        [SerializeField] StatDataSetter statSetter;
 
         GameManagerEvent gameMgrEvent = new GameManagerEvent();
+
+        public StatData PlayerStat { get; private set; }
 
         public GameObject volumePanel;
         public bool IsPause { get; private set; }
         public Player Pl { get; private set; }
+
+        bool isGuideShow;
         private void Awake()
         {
             if (instance != null)
@@ -38,7 +44,7 @@ namespace ReadingStrike.Game.InGame
         }
         void Start()
         {
-            GameInit();
+            GameStartFeat();
         }
 
         void Update()
@@ -52,16 +58,17 @@ namespace ReadingStrike.Game.InGame
         }
         private void OnDestroy()
         {
-            GameQuit();
+            GameDestroyFeat();
         }
         #region Game 시작, 종료 시 함수
-        void GameInit()
+        void GameStartFeat()
         {
             soundMgr.Init();
             AddEventSceneChange(SceneChangeCompletedFeat);
             AddEventSceneChangeCompleted(GameResume);
+            PlayerStat = statSetter.GetPlayerStatData();
         }
-        void GameQuit()
+        void GameDestroyFeat()
         {
             soundMgr.DestroyFeat();
             RemoveEventSceneChange(SceneChangeCompletedFeat);
@@ -89,15 +96,15 @@ namespace ReadingStrike.Game.InGame
         public void RemoveEventSceneChangeCompleted(Action func) { sceneMgr.RemoveEventSceneChangeCompleted(func); }
         #endregion
         #region SceneChange 함수
-        public void SceneChangeStart(SceneType type) 
-        { 
+        public void SceneChangeStart(SceneType type)
+        {
             sceneMgr.SceneChangeStartCo(type);
         }
         void SceneChangeCompletedFeat(SceneType type)
         {
             SceneType preType = CurSceneType;
             CurSceneType = type;
-            Debug.Log($"{type} Scene으로 이동");
+            //Debug.Log($"{type} Scene으로 이동");
 
             switch (type)
             {
@@ -105,10 +112,15 @@ namespace ReadingStrike.Game.InGame
                 case SceneType.Village:
                     break;
                 default:
-                    if (Pl == null) Debug.Log("Player 없음");
+                    //if (Pl == null) Debug.Log("Player 없음");
                     Pl.AddEventDie(GamePause);
-                    if (BattleManager.instance == null) Debug.Log("BattleManager 없음");
+                    //if (BattleManager.instance == null) Debug.Log("BattleManager 없음");
                     BattleManager.instance.AddEventPlayerWin(GamePause);
+                    if (!isGuideShow)
+                    {
+                        DungeonUIManager.instanse.GuidePanelShow();
+                        isGuideShow = true;
+                    }
                     break;
             }
             switch (preType)
@@ -118,20 +130,37 @@ namespace ReadingStrike.Game.InGame
                     break;
                 default:
                     BattleManager.instance.RemoveEventPlayerWin(GamePause);
-                    BattleManager.instance = null;
+                    BattleManager.instance.DestroyFeatFromOutside();
                     Pl.RemoveEventDie(GamePause);
                     Pl = null;
                     break;
             }
         }
-        public void SceneChangeTitle() => SceneChangeStart(SceneType.Title); 
-        public void SceneChangeVillage() => SceneChangeStart(SceneType.Village); 
+        public void SceneChangeTitle() => SceneChangeStart(SceneType.Title);
+        public void SceneChangeVillage() => SceneChangeStart(SceneType.Village);
         public void SceneChangeDungeon() => SceneChangeStart(SceneType.PlaneDungeon);
         #endregion
         #region 주입 관련 함수
         public void PlayerSetting(Player pl)
         {
             Pl = pl;
+        }
+        #endregion
+        #region Stat 관련 함수
+        public StatData GetPlayerStat()
+        {
+            return PlayerStat;
+        }
+        public StatData GetMonsterStat(CharacterType type) => statSetter.GetMonsterStatData(type);
+        #endregion
+        #region 다른 class에서 사용할 함수
+        public void GameQuit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
         }
         #endregion
     }

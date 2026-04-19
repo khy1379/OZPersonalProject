@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ReadingStrike.Game.InGame;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,13 +10,16 @@ namespace ReadingStrike.Game.UI
         DungeonSelect,
         Stat,
         Skill,
-        //Item
+        Item,
+        GameQuit
     }
     public class VillageUIManager : BtnSetter
     {
         [SerializeField] TextMeshProUGUI uiTitleTxt;
         [SerializeField] List<GameObject> panelList;
         List<int> setBtnList;
+
+        [SerializeField] StatInfoUIManager statUI;
         private void Start()
         {
             VillageUIBtnSet();
@@ -25,7 +29,7 @@ namespace ReadingStrike.Game.UI
         {
             int enumCnt = System.Enum.GetValues(typeof(VillageUIBtnType)).Length;
             setBtnList = new List<int>(enumCnt);
-            for (int i = 0; i < enumCnt; i++)
+            for (int i = 0; i < enumCnt - 1; i++)
             {
                 if (panelList.Count <= i)
                 {
@@ -34,16 +38,17 @@ namespace ReadingStrike.Game.UI
                 }
                 if (!btnList[i].gameObject.activeSelf)
                 {
-                    Debug.Log($"{(VillageUIBtnType)i}번 버튼 setting 안 함");
+                    //Debug.Log($"{(VillageUIBtnType)i}번 버튼 setting 안 함");
                     continue;
                 }
                 VillageUIBtnType getType = (VillageUIBtnType)i;
                 BtnOnClickEventSetting(i, () => PanelShow(getType));
-                Debug.Log($"{getType}번 버튼 setting");
+                //Debug.Log($"{getType}번 버튼 setting");
                 setBtnList.Add((int)getType);
             }
+            BtnOnClickEventSetting((int)VillageUIBtnType.GameQuit, GameManager.instance.GameQuit);
         }
-        public void PanelShow(VillageUIBtnType type)
+        void PanelShow(VillageUIBtnType type)
         {
             uiTitleTxt.text = type.ToString();
             VillageUIBtnType getType = type;
@@ -60,6 +65,16 @@ namespace ReadingStrike.Game.UI
                     panelList[setBtnList[i]].SetActive(false);
                     btnList[setBtnList[i]].interactable = true;
                 }
+            }
+            switch (type)
+            {
+                case VillageUIBtnType.DungeonSelect:
+                    break;
+                case VillageUIBtnType.Stat:
+                    statUI.StatShow();
+                    break;
+                case VillageUIBtnType.Skill:
+                    break;
             }
         }
     }

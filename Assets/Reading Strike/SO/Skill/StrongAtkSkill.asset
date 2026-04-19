@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: StrongAtkSkill
   m_EditorClassIdentifier: 
   data:
-    skillName: StrongAtk
-    power: 2
     type: 1
+    skillMat: {fileID: 2100000, guid: 1b2b5c820886800409d6ac3bcb21cf79, type: 2}
+    power: 2
     cooltime: 3
     stifnessTime: 3
-    skillMat: {fileID: 2100000, guid: 1b2b5c820886800409d6ac3bcb21cf79, type: 2}
-    knockBackPower: 0
-    battleFrameValue: 0
     skillRange: 2
+  skillIcon: {fileID: 21300000, guid: f78b0faf31ba4fe47ba26c94e6f55c00, type: 3}
+  skillName: Strong Atk
+  skillDescription: "\uAC15\uD558\uAC8C \uACF5\uACA9\uD569\uB2C8\uB2E4. \uB370\uBBF8\uC9C0\uB294
+    \uAC15\uD558\uB098, \uCFE8\uD0C0\uC784\uACFC \uACBD\uC9C1 \uC2DC\uAC04\uC774
+    \uAE41\uB2C8\uB2E4.\n\uD0C0\uC785 : B\n\uC0C1\uC131 : C \uD0C0\uC785\uC5D0 \uC720\uB9AC,
+    A \uD0C0\uC785\uC5D0 \uBD88\uB9AC"

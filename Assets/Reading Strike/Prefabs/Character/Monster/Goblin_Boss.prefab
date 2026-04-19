@@ -215,6 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4089e1fde7acc384ea091b427035488a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 2
   statSO: {fileID: 11400000, guid: 4dcaea4eb26aa45428d386ce3d1e4f85, type: 2}
   hp: 100
   cAnim: {fileID: 3487550526080390130}

@@ -5,17 +5,17 @@ namespace ReadingStrike.Game.UI
 {
     public class MonsterHPBar : HPBar
     {
-        Monster mon;
-        public void MonHPBarSetting(Monster mon)
-        {
-            if (this.mon == mon) return;
-            if (this.mon != null) this.mon.HPBarClear();
-            this.mon = mon;
-            this.mon.HPBarSetting(this);
-        }
-        public void MonHPBarSetting(Character character)
-        {
-            if (character is Monster tMon) MonHPBarSetting(tMon);
-        }
+        //public Monster Mon { get; private set; }
+        //public void MonHPBarSetting(Monster mon)
+        //{
+        //    if (Mon == mon) return;
+        //    if (Mon != null) Mon.HPBarClear();
+        //    Mon = mon;
+        //    Mon.HPBarSetting(this);
+        //}
+        //public void MonHPBarSetting(Character character)
+        //{
+        //    if (character is Monster tMon) MonHPBarSetting(tMon);
+        //}
     }
 }

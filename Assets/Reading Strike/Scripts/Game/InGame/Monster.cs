@@ -95,7 +95,7 @@ namespace ReadingStrike.Game.InGame
         //    Gizmos.DrawWireSphere(transform.position, searchRadius);
         //    //Gizmos.DrawLine(rb.position, rb.position + rb.transform.forward * sc.searchedDistance);
         //}
-        public void HPBarSetting(HPBar hpBar) => this.hpBar = hpBar;
-        public void HPBarClear() => hpBar = null;
+        //public void HPBarSetting(HPBar hpBar) => this.hpBar = hpBar;
+        //public void HPBarClear() => hpBar = null;
     }
 }

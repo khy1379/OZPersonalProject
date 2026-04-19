@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: PlayerNormalStat
   m_EditorClassIdentifier: 
   data:
-    maxHp: 100
+    charType: 0
+    maxHP: 100
     atk: 10
     def: 0
     moveSpeed: 5
+    criticalChance: 10

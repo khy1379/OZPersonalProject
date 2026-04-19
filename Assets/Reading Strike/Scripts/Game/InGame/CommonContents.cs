@@ -10,7 +10,7 @@ namespace ReadingStrike.Game.GameData
     public enum InGameState { Playing, Pause, Death }
     public enum SkillType { NormalAtk, StrongAtk, Defense }
     public enum BattleResultType { None, AWin, BWin, Draw }
-    public enum CharacterType { Player, Monster_Normal, Monster_Boss }
+    public enum CharacterType { Player, Goblin_Normal, Goblin_Boss }
     public enum AnimationTriggerType
     {
         NormalAtk,
@@ -21,6 +21,14 @@ namespace ReadingStrike.Game.GameData
         Idle
     }
     public enum DungeonType { Plane, }
+    public enum StatType
+    {
+        MaxHP,
+        Atk,
+        Def,
+        MoveSpeed,
+        CriticalChance,
+    }
     public static class CTSSetter
     {
         public static void CTSSet(ref CancellationTokenSource cts)

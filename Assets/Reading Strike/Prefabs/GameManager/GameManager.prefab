@@ -434,7 +434,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -2961,6 +2961,7 @@ GameObject:
   - component: {fileID: 4202390848516770948}
   - component: {fileID: 3650597502225468401}
   - component: {fileID: 2258250449572876371}
+  - component: {fileID: 9221754686042230856}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2999,6 +3000,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneMgr: {fileID: 3650597502225468401}
   soundMgr: {fileID: 2258250449572876371}
+  statSetter: {fileID: 9221754686042230856}
   volumePanel: {fileID: 2972049059711840710}
 --- !u!114 &3650597502225468401
 MonoBehaviour:
@@ -3050,3 +3052,19 @@ MonoBehaviour:
     isMute: 0
     slider: {fileID: 646556516004413587}
     muteToggle: {fileID: 2862868319833423421}
+--- !u!114 &9221754686042230856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871815552373227576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 812afb4f338392a4893cf79ef8742141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStatSo: {fileID: 11400000, guid: 1f592dc9afff795419dd814d12fb25a2, type: 2}
+  monsterStatSo:
+  - {fileID: 11400000, guid: 36599b788581f2d4c838655fdc37b804, type: 2}
+  - {fileID: 11400000, guid: 4dcaea4eb26aa45428d386ce3d1e4f85, type: 2}

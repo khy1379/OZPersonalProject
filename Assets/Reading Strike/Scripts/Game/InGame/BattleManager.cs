@@ -18,6 +18,8 @@ namespace ReadingStrike.Game.InGame
         public event Action<BattleResultType> RequestBattleResult;
         [SerializeField] MonsterHPBar monHpBar;
         BattleEvent be = new BattleEvent();
+        Character player;
+        Character foughtMonster;
         private void Awake()
         {
             instance = this;
@@ -25,54 +27,81 @@ namespace ReadingStrike.Game.InGame
         private void Start()
         {
             curDungeonMonCnt = curDungeonMonMaxCnt;
+            player = GameManager.instance.Pl;
+            DungeonUIManager.instanse.PlayerHPBarEventSet(player);
+            player.HPValueSet();
         }
-        private void OnDestroy()
+        public void DestroyFeatFromOutside()
         {
-            //instance = null;
+            instance = null;
+            if (player != null) DungeonUIManager.instanse.PlayerHPBarEventRemove(player);
+            if (foughtMonster != null) DungeonUIManager.instanse.MonsterHPBarEventRemove(foughtMonster);
         }
         public void MonsterCntDown()
         {
             curDungeonMonCnt--;
-            if(curDungeonMonCnt == 0)
+            if (curDungeonMonCnt == 0)
             {
                 be.RaisePlayerWin();
             }
         }
         public void RaiseBattleResult(BattleResultType battleResult) { RequestBattleResult?.Invoke(battleResult); }
-        public void BattleStart(Character pl, Character mon)
+        public void BattleStart(Character mon)
         {
-            pl.MoveStop();
-            mon.MoveStop();
-            monHpBar.MonHPBarSetting(mon);
-            BattleResultType resultType = BattleResultType.None;
-            if (pl.IsSkillCharged && mon.IsSkillCharged)
+            bool isUpdateMonHpBar = false;
+            bool isUpdatePlayerHpBar = false;
+            if (mon != foughtMonster)
             {
-                resultType = BattleResult(pl.ChargedSkill.Data.type, mon.ChargedSkill.Data.type);
+                if(foughtMonster != null) DungeonUIManager.instanse.MonsterHPBarEventRemove(foughtMonster);
+                foughtMonster = mon;
+                isUpdateMonHpBar = true;
+                DungeonUIManager.instanse.MonsterHPBarEventSet(foughtMonster);
             }
-            else if(pl.IsSkillCharged && !mon.IsSkillCharged)
+            player.MoveStop();
+            foughtMonster.MoveStop();
+            foughtMonster.LookEnemy(player.transform.position);
+            BattleResultType resultType = BattleResultType.None;
+            if (player.IsSkillCharged && foughtMonster.IsSkillCharged)
+            {
+                resultType = BattleResult(player.ChargedSkill.Data.type, foughtMonster.ChargedSkill.Data.type);
+            }
+            else if (player.IsSkillCharged && !foughtMonster.IsSkillCharged)
             {
                 resultType = BattleResultType.AWin;
             }
-            else if(!pl.IsSkillCharged && mon.IsSkillCharged)
+            else if (!player.IsSkillCharged && foughtMonster.IsSkillCharged)
             {
                 resultType = BattleResultType.BWin;
             }
             switch (resultType)
             {
                 case BattleResultType.Draw:
-                    pl.BattleDrawAction();
-                    mon.BattleDrawAction();
+                    player.BattleDrawAction();
+                    foughtMonster.BattleDrawAction();
                     RaiseBattleResult(BattleResultType.Draw);
                     break;
                 case BattleResultType.AWin:
-                    pl.BattleWinAction(mon);
+                    player.BattleWinAction(foughtMonster);
+                    isUpdateMonHpBar = true;
                     break;
                 case BattleResultType.BWin:
-                    mon.BattleWinAction(pl);
+                    foughtMonster.BattleWinAction(player);
+                    isUpdatePlayerHpBar = true;
                     break;
             }
-            if (mon.IsDeath)
-                MonsterCntDown();
+            if(isUpdatePlayerHpBar)
+            {
+                player.HPValueSet();
+            }
+            if(isUpdateMonHpBar)
+            {
+                foughtMonster.HPValueSet();
+                if (foughtMonster.IsDeath)
+                {
+                    MonsterCntDown();
+                    DungeonUIManager.instanse.MonsterHPBarEventRemove(foughtMonster);
+                }
+            }
         }
         BattleResultType BattleResult(SkillType plSkillType, SkillType monSkillType)
         {
